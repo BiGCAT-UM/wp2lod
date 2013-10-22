@@ -1,4 +1,4 @@
-wp2lod
-======
+WP2RDFAll
+=========
 
-Java source for conversion of WikiPathways GPML to triples
+WPRDF code dump
