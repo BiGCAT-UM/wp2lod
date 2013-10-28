@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -86,7 +87,13 @@ public class Pathway2RDFv2 {
 		BioDataSource.init();
 		Class.forName("org.bridgedb.rdb.IDMapperRdb");
 		File dir = new File("/home/wikipathways/database/"); //TODO Get Refector to get them directly form bridgedb.org
-		File[] bridgeDbFiles = dir.listFiles();
+		FilenameFilter filter = new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		        return name.toLowerCase().endsWith(".txt");
+		    }
+		};
+	
+		File[] bridgeDbFiles = dir.listFiles(filter);
 		IDMapperStack mapper = new IDMapperStack();
 		for (File bridgeDbFile : bridgeDbFiles) {
 			System.out.println(bridgeDbFile.getAbsolutePath());
