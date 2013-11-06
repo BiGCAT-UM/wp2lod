@@ -1,12 +1,20 @@
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,10 +23,21 @@ import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.rpc.ServiceException;
+import javax.xml.stream.XMLEventFactory;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bridgedb.DataSource;
 import org.bridgedb.IDMapper;
 import org.bridgedb.IDMapperException;
+import org.bridgedb.IDMapperStack;
 import org.bridgedb.Xref;
 import org.bridgedb.bio.BioDataSource;
 import org.pathvisio.model.ConverterException;
@@ -34,18 +53,123 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.XSD;
+
 import de.fuberlin.wiwiss.ng4j.swp.vocabulary.FOAF;
 
 
 public class WpRDFFunctionLibrary {
 	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException, ServiceException {
 		return new WikiPathwaysClient(new URL("http://www.wikipathways.org/wpi/webservice/webservice.php"));
+	}
+	public static IDMapperStack createBridgeDbMapper() throws ClassNotFoundException, IDMapperException{
+		BioDataSource.init();
+		Class.forName("org.bridgedb.rdb.IDMapperRdb");
+		File dir = new File("/home/wikipathways/database/"); //TODO Get Refector to get them directly form bridgedb.org
+		FilenameFilter filter = new FilenameFilter() {
+		    public boolean accept(File dir, String name) {
+		        return name.toLowerCase().endsWith(".txt");
+		    }
+		};
+	
+		File[] bridgeDbFiles = dir.listFiles(filter);
+		IDMapperStack mapper = new IDMapperStack();
+		for (File bridgeDbFile : bridgeDbFiles) {
+			System.out.println(bridgeDbFile.getAbsolutePath());
+			mapper.addIDMapper("idmapper-pgdb:" + bridgeDbFile.getAbsolutePath());
+		}
+		return mapper;
+	}
+	
+	public static Model createBridgeDbModel() throws ClassNotFoundException, IDMapperException, FileNotFoundException{
+		Model bridgeDbmodel = ModelFactory.createDefaultModel();
+		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
+		bridgeDbmodel.read(in, "", "TURTLE");
+		return bridgeDbmodel;
+	}
+	
+	public static void setModelPrefix(Model model){
+		model.setNsPrefix("biopax", Biopax_level3.getURI());
+		model.setNsPrefix("gpml", Gpml.getURI());
+		model.setNsPrefix("wp", Wp.getURI());
+		model.setNsPrefix("xsd", XSD.getURI());
+		model.setNsPrefix("rdf", RDF.getURI());
+		model.setNsPrefix("rdfs", RDFS.getURI());
+		model.setNsPrefix("dcterms", DCTerms.getURI());
+		model.setNsPrefix("wprdf", "http://rdf.wikipathways.org/");
+		model.setNsPrefix("pubmed", "http://www.ncbi.nlm.nih.gov/pubmed/");
+		model.setNsPrefix("foaf", FOAF.getURI());
+		model.setNsPrefix("ncbigene", "http://identifiers.org/ncbigene/");
+		model.setNsPrefix("cas", "http://identifiers.org/cas/");
+		model.setNsPrefix("dc", DC.getURI());
+		model.setNsPrefix("skos", Skos.getURI());
+		model.setNsPrefix("void", Void.getURI());
+		model.setNsPrefix("wprdf", "http://rdf.wikipathways.org/");
+		model.setNsPrefix("pav", Pav.getURI());
+		model.setNsPrefix("prov", Prov.getURI());
+		model.setNsPrefix("dcterms", DCTerms.getURI());
+		model.setNsPrefix("hmdb", "http://identifiers.org/hmdb/");
+		model.setNsPrefix("freq", Freq.getURI());
+	}
+	
+	public static void populateVoid(Model voidModel,HashMap<String, String> organismTaxonomy){
+		//Populate void.ttl
+		Calendar now = Calendar.getInstance();
+		Literal nowLiteral = voidModel.createTypedLiteral(now);
+		Literal titleLiteral = voidModel.createLiteral("WikiPathways-RDF VoID Description", "en");
+		Literal descriptionLiteral = voidModel.createLiteral("This is the VoID description for a WikiPathwyas-RDF dataset.", "en");
+		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/");
+		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
+		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
+		Resource authorResource = voidModel.createResource("http://orcid.org/0000-0001-9773-4008");
+		Resource apiResource = voidModel.createResource("http://www.wikipathways.org/wpi/webservice/webservice.php");
+		Resource mainDatadump = voidModel.createResource("http://rdf.wikipathways.org/wpContent.ttl.gz");
+		Resource license = voidModel.createResource("http://creativecommons.org/licenses/by/3.0/");
+		Resource instituteResource = voidModel.createResource("http://dbpedia.org/page/Maastricht_University");
+		voidBase.addProperty(RDF.type, Void.Dataset);
+		voidBase.addProperty(DCTerms.title, titleLiteral);
+		voidBase.addProperty(DCTerms.description, descriptionLiteral);
+		voidBase.addProperty(FOAF.homepage, wpHomeBase);
+		voidBase.addProperty(DCTerms.license, license);
+		voidBase.addProperty(Void.uriSpace, voidBase);
+		voidBase.addProperty(Void.uriSpace, identifiersOrg);
+		voidBase.addProperty(Pav.importedBy, authorResource);
+		voidBase.addProperty(Pav.importedFrom, apiResource);
+		voidBase.addProperty(Pav.importedOn, nowLiteral);
+		voidBase.addProperty(Void.dataDump, mainDatadump);
+		voidBase.addProperty(Voag.frequencyOfChange, Freq.Irregular);
+		voidBase.addProperty(Pav.createdBy, authorResource);
+		voidBase.addProperty(Pav.createdAt, instituteResource);		 
+		voidBase.addLiteral(Pav.createdOn, nowLiteral);
+		voidBase.addProperty(DCTerms.subject, Biopax_level3.Pathway);
+		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/ncbigene/2678"));
+		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/pubmed/15215856"));
+		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/hmdb/HMDB02005"));
+		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://rdf.wikipathways.org/WP15"));
+		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/obo.chebi/17242"));
+
+		for (String organism : organismTaxonomy.values()) {
+			voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://dbpedia.org/page/"+organism.replace(" ", "_")));
+		}
+		voidBase.addProperty(Void.vocabulary, Biopax_level3.NAMESPACE);
+		voidBase.addProperty(Void.vocabulary, voidModel.createResource(Wp.getURI()));
+		voidBase.addProperty(Void.vocabulary, voidModel.createResource(Gpml.getURI()));
+		voidBase.addProperty(Void.vocabulary, FOAF.NAMESPACE);
+		voidBase.addProperty(Void.vocabulary, Pav.NAMESPACE);
+	}
+	
+	public static Model createPathwayModel(){
+		Model pathwayModel = ModelFactory.createDefaultModel();
+		setModelPrefix(pathwayModel);
+		return pathwayModel;
 	}
 
 	public static void addBdbLinkSets(Model openPhactsLinkSets, IDMapper  mapper, Xref idXref, Resource internalWPDataNodeResource) throws IDMapperException {
@@ -745,6 +869,76 @@ public class WpRDFFunctionLibrary {
 		}
 	}
 
+	public static void mergeGpmltoSingleFile (String gpmlLocation) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException, ConverterException{
+		// Based on: http://stackoverflow.com/questions/10759775/how-to-merge-1000-xml-files-into-one-in-java
+		//for (int i = 1; i < 8 ; i++) {		
+		Writer outputWriter = new FileWriter("/tmp/WpGPML.xml");
+        XMLOutputFactory xmlOutFactory = XMLOutputFactory.newFactory();
+        XMLEventWriter xmlEventWriter = xmlOutFactory.createXMLEventWriter(outputWriter);
+        XMLEventFactory xmlEventFactory = XMLEventFactory.newFactory();
+
+        xmlEventWriter.add(xmlEventFactory.createStartDocument("ISO-8859-1", "1.0"));
+        xmlEventWriter.add(xmlEventFactory.createStartElement("", null, "PathwaySet"));
+        xmlEventWriter.add(xmlEventFactory.createAttribute("creationData", basicCalls.now()));
+        XMLInputFactory xmlInFactory = XMLInputFactory.newFactory();
+        
+        	
+        File dir = new File("/tmp/"+gpmlLocation);
+        
+        File[] rootFiles = dir.listFiles();
+        //the section below is only in case of analysis sets
+        for (File rootFile : rootFiles) {
+        	String fileName = FilenameUtils.removeExtension(rootFile.getName());
+        	System.out.println(fileName);
+        	String[] identifiers = fileName.split("_");
+        	System.out.println(fileName);
+        	String wpIdentifier = identifiers[identifiers.length-2];
+        	String wpRevision = identifiers[identifiers.length-1];
+        	//Pattern pattern = Pattern.compile("_(WP[0-9]+)_([0-9]+).gpml");
+        	//Matcher matcher = pattern.matcher(fileName);
+        	//System.out.println(matcher.find());
+        	//String wpIdentifier = matcher.group(1);
+        	File tempFile = new File(constants.localAllGPMLCacheDir()+wpIdentifier+"_"+wpRevision+".gpml");
+        	//System.out.println(matcher.group(1));
+        	//String wpRevision = matcher.group(2);
+        	//System.out.println(matcher.group(2));
+        	if (!(tempFile.exists())){					
+				System.out.println(tempFile.getName());
+				Document currentGPML = basicCalls.openXmlFile(rootFile.getPath());
+				basicCalls.saveDOMasXML(WpRDFFunctionLibrary.addWpProvenance(currentGPML, wpIdentifier, wpRevision), constants.localCurrentGPMLCache() + tempFile.getName());
+			}
+        }
+        
+        
+        dir = new File("/tmp/GPML");
+        rootFiles = dir.listFiles();
+        for (File rootFile : rootFiles) {
+        	System.out.println(rootFile);
+            XMLEventReader xmlEventReader = xmlInFactory.createXMLEventReader(new StreamSource(rootFile));
+            XMLEvent event = xmlEventReader.nextEvent();
+            // Skip ahead in the input to the opening document element
+            try {
+            while (event.getEventType() != XMLEvent.START_ELEMENT) {
+                event = xmlEventReader.nextEvent();
+            } 
+
+
+            do {
+                xmlEventWriter.add(event);
+                event = xmlEventReader.nextEvent();
+            } while (event.getEventType() != XMLEvent.END_DOCUMENT);
+            xmlEventReader.close();
+            } catch (Exception e) {
+            	System.out.println("Malformed gpml file");
+            }
+        }
+
+        xmlEventWriter.add(xmlEventFactory.createEndElement("", null, "PathwaySet"));
+        xmlEventWriter.add(xmlEventFactory.createEndDocument());
+
+        xmlEventWriter.close();
+        outputWriter.close();
+	}
 	public static void addPathwayOntologyTriples(Model model, Resource pwResource, Node ontologyNode){
 		String identifier = basicCalls.getStringNodeContent(ontologyNode, "bp:ID");
 		pwResource.addProperty(Wp.pathwayOntology, model.createResource(constants.getOntologyURI(identifier).replace(":", "_").replace("http_", "http:"))); //TDOD discuss with Tina and Alex about what to do with this

@@ -1,181 +1,86 @@
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.rpc.ServiceException;
-
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
 import org.apache.commons.io.FileUtils;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.IDMapperStack;
-import org.bridgedb.bio.BioDataSource;
-import org.pathvisio.wikipathways.WikiPathwaysClient;
+import org.pathvisio.model.ConverterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DC;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+
 
 
 public class WP2RDFConversion {
 
-	/**
-	 * @param args
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ServiceException 
-	 * @throws ClassNotFoundException 
-	 * @throws IDMapperException 
-	 * @throws ParseException 
-	 */
-
-
-
-	public static void setModelPrefix(Model model){
-		model.setNsPrefix("biopax", Biopax_level3.getURI());
-		model.setNsPrefix("gpml", Gpml.getURI());
-		model.setNsPrefix("wp", Wp.getURI());
-		model.setNsPrefix("xsd", XSD.getURI());
-		model.setNsPrefix("rdf", RDF.getURI());
-		model.setNsPrefix("rdfs", RDFS.getURI());
-		model.setNsPrefix("dcterms", DCTerms.getURI());
-		model.setNsPrefix("wprdf", "http://rdf.wikipathways.org/");
-		model.setNsPrefix("pubmed", "http://www.ncbi.nlm.nih.gov/pubmed/");
-		model.setNsPrefix("foaf", FOAF.getURI());
-		model.setNsPrefix("ncbigene", "http://identifiers.org/ncbigene/");
-		model.setNsPrefix("cas", "http://identifiers.org/cas/");
-		model.setNsPrefix("dc", DC.getURI());
-		model.setNsPrefix("skos", Skos.getURI());
-	}
-
-	public static Model createPathwayModel(){
-		Model pathwayModel = ModelFactory.createDefaultModel();
-		setModelPrefix(pathwayModel);
-		return pathwayModel;
-	}
-	
-
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException {
-		
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException, ConverterException {	
+		/* We keep a three dimensional type of versioning for the RDF dumps of WikiPathways.
+		 * First there is the software version. This indicates the incremental updates or changes in the code
+		 * responsible for the RDF generation (these files)
+		 * The schema version is to keep track of changes in the underlying data model. Base are the vocabulary.wikipathways.org
+		 * The latest revision is the highest revision number of the pathways converted into RDF. A pathway with a
+		 * higer revision number is not yet available in RDF. 
+		 */
+		//TODO The versioning system is not fully implemented yet. 
 		int softwareVersion = 0;
 		int schemaVersion = 0;
 		int latestRevision = 0;
-	   
-		BioDataSource.init();
-		Class.forName("org.bridgedb.rdb.IDMapperRdb");
-		File dir = new File("/home/wikipathways/database/"); //TODO Get Refector to get them directly form bridgedb.org
-		FilenameFilter filter = new FilenameFilter() {
-		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".txt");
-		    }
-		};
-	
-		File[] bridgeDbFiles = dir.listFiles(filter);
-		IDMapperStack mapper = new IDMapperStack();
-		for (File bridgeDbFile : bridgeDbFiles) {
-			System.out.println(bridgeDbFile.getAbsolutePath());
-			mapper.addIDMapper("idmapper-pgdb:" + bridgeDbFile.getAbsolutePath());
-		}
-		Model bridgeDbmodel = ModelFactory.createDefaultModel();
-		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
-		bridgeDbmodel.read(in, "", "TURTLE");
 		
-		Model openPhactsLinkSets = ModelFactory.createDefaultModel();
-
-		//Map wikipathway organisms to NCBI organisms
+		/* WikiPathways covers different organism, which are stored as text labels (e.g. Homo sapiens). The 
+		 * The webservice call http://www.wikipathways.org/wpi/webservice/webservice.php/listOrganisms returns 
+		 * all the covered species. 
+		 * getOrganismsTaxonomyMapping(), returns the URI for each of these organism from NCBI's taxonomy by using 
+		 * eutils. 
+		 */
 		HashMap<String, String> organismTaxonomy = WpRDFFunctionLibrary.getOrganismsTaxonomyMapping();
-		//HashMap<String, String> miriamSources = new HashMap<String, String>();
-		//		HashMap<String, Str ing> miriamLinks = basicCalls.getMiriamUriBridgeDb();
-
-		//Document wikiPathwaysDom = basicCalls.openXmlFile(args[0]);
+			
+		/* This serializer requires a single XML file containing all pathways. 
+		 * When downloaded however each pathway is captured in invidual GPML files
+		 * mergeGpmltoSingleFile concatenates all files in a given directory into one file (i.e. /tmp/WpGPML.xml)
+		 */
+		// 
+		WpRDFFunctionLibrary.mergeGpmltoSingleFile("OPSWIKIDUMP/");	
 		Document wikiPathwaysDom = basicCalls.openXmlFile("/tmp/WpGPML.xml");
+		//TODO These parameters should not be part of the code, but belong in preferences files yet to be implemented.
 
-		//initiate the Jena model to be populated
+		/* We use Jena (http://jena.apache.org/) as the API to generate RDF. 
+		 * Below both model and voidModel are initiated and the appropriate prefixes are set. 
+		 * Prefixes are not perse necessary. They allow for more readable URI in the generated triples
+		 * New prefixes are to be set in WpRDFFunctionLibrary.setModelPrefix.
+		 */
 		Model model = ModelFactory.createDefaultModel();
 		Model voidModel = ModelFactory.createDefaultModel();
-
-		voidModel.setNsPrefix("xsd", XSD.getURI());
-		voidModel.setNsPrefix("void", Void.getURI());
-		voidModel.setNsPrefix("wprdf", "http://rdf.wikipathways.org/");
-		voidModel.setNsPrefix("pav", Pav.getURI());
-		voidModel.setNsPrefix("prov", Prov.getURI());
-		voidModel.setNsPrefix("dcterms", DCTerms.getURI());
-		voidModel.setNsPrefix("biopax", Biopax_level3.getURI());
-		voidModel.setNsPrefix("gpml", Gpml.getURI());
-		voidModel.setNsPrefix("wp", Wp.getURI());
-		voidModel.setNsPrefix("foaf", FOAF.getURI());
-		voidModel.setNsPrefix("hmdb", "http://identifiers.org/hmdb/");
-		voidModel.setNsPrefix("freq", Freq.getURI());
-		voidModel.setNsPrefix("dc", DC.getURI());
-		setModelPrefix(model);
-
-		//Populate void.ttl
-		Calendar now = Calendar.getInstance();
-		Literal nowLiteral = voidModel.createTypedLiteral(now);
-		Literal titleLiteral = voidModel.createLiteral("WikiPathways-RDF VoID Description", "en");
-		Literal descriptionLiteral = voidModel.createLiteral("This is the VoID description for a WikiPathwyas-RDF dataset.", "en");
-		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/");
-		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
-		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
-		Resource authorResource = voidModel.createResource("http://orcid.org/0000-0001-9773-4008");
-		Resource apiResource = voidModel.createResource("http://www.wikipathways.org/wpi/webservice/webservice.php");
-		Resource mainDatadump = voidModel.createResource("http://rdf.wikipathways.org/wpContent.ttl.gz");
-		Resource license = voidModel.createResource("http://creativecommons.org/licenses/by/3.0/");
-		Resource instituteResource = voidModel.createResource("http://dbpedia.org/page/Maastricht_University");
-		voidBase.addProperty(RDF.type, Void.Dataset);
-		voidBase.addProperty(DCTerms.title, titleLiteral);
-		voidBase.addProperty(DCTerms.description, descriptionLiteral);
-		voidBase.addProperty(FOAF.homepage, wpHomeBase);
-		voidBase.addProperty(DCTerms.license, license);
-		voidBase.addProperty(Void.uriSpace, voidBase);
-		voidBase.addProperty(Void.uriSpace, identifiersOrg);
-		voidBase.addProperty(Pav.importedBy, authorResource);
-		voidBase.addProperty(Pav.importedFrom, apiResource);
-		voidBase.addProperty(Pav.importedOn, nowLiteral);
-		voidBase.addProperty(Void.dataDump, mainDatadump);
-		voidBase.addProperty(Voag.frequencyOfChange, Freq.Irregular);
-		voidBase.addProperty(Pav.createdBy, authorResource);
-		voidBase.addProperty(Pav.createdAt, instituteResource);		 
-		voidBase.addLiteral(Pav.createdOn, nowLiteral);
-		voidBase.addProperty(DCTerms.subject, Biopax_level3.Pathway);
-		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/ncbigene/2678"));
-		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/pubmed/15215856"));
-		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/hmdb/HMDB02005"));
-		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://rdf.wikipathways.org/WP15"));
-		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/obo.chebi/17242"));
-
-		for (String organism : organismTaxonomy.values()) {
-			voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://dbpedia.org/page/"+organism.replace(" ", "_")));
-		}
-		voidBase.addProperty(Void.vocabulary, Biopax_level3.NAMESPACE);
-		voidBase.addProperty(Void.vocabulary, voidModel.createResource(Wp.getURI()));
-		voidBase.addProperty(Void.vocabulary, voidModel.createResource(Gpml.getURI()));
-		voidBase.addProperty(Void.vocabulary, FOAF.NAMESPACE);
-		voidBase.addProperty(Void.vocabulary, Pav.NAMESPACE);
-		//Custom Properties
-		NodeList pathwayElements = wikiPathwaysDom.getElementsByTagName("Pathway");
+		Model openPhactsLinkSets = ModelFactory.createDefaultModel();
+		WpRDFFunctionLibrary.setModelPrefix(model);
+		WpRDFFunctionLibrary.setModelPrefix(voidModel);
+		WpRDFFunctionLibrary.populateVoid(voidModel, organismTaxonomy);
 		
-		//BioDataSource.init();
+		/* Similar pathways entities can have different identifiers. To allow being able to 
+		 * recognize similarity we use bridgeDb (http://www.bridgedb.org). For each pathway element
+		 * unified identifier uri are set. 
+		 */
+		Model bridgeDbmodel = WpRDFFunctionLibrary.createBridgeDbModel();
+		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper();
+
+		
+		/* From here on the actual RDF conversion starts. The concatenated pathways into a single file is loaded and now
+		 * being processed in a strait forward way. First the pathway information is converted into RDF and then each individual
+		 * pathway element. 
+		 */
+		NodeList pathwayElements = wikiPathwaysDom.getElementsByTagName("Pathway");
 		for (int i=0; i<pathwayElements.getLength(); i++){
-			Model pathwayModel = createPathwayModel(); // create empty rdf model
+			Model pathwayModel = WpRDFFunctionLibrary.createPathwayModel(); // create empty rdf model
 			String wpId = pathwayElements.item(i).getAttributes().getNamedItem("identifier").getTextContent();
 			String revision = pathwayElements.item(i).getAttributes().getNamedItem("revision").getTextContent();
 			String pathwayOrganism = "";
@@ -184,36 +89,40 @@ public class WP2RDFConversion {
             if (Integer.valueOf(revision) > latestRevision){
             	latestRevision = Integer.valueOf(revision);
             }
-			File f = new File("/tmp/"+args[0]+"/"+wpId+"_r"+revision+".ttl");
+			File f = new File("/tmp/OPSWPRDF/"+wpId+"_r"+revision+".ttl");
 			System.out.println(f.getName());
 			if(!f.exists()) {
-				
-				//Resource voidPwResource = wpRelatedCalls.addVoidTriples(voidModel, voidBase, pathwayElements.item(i), client);
-				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, pathwayElements.item(i), organismTaxonomy);
+				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, pathwayElements.item(i), organismTaxonomy);				
 				
 				// Get the comments
 				NodeList commentElements = ((Element) pathwayElements.item(i)).getElementsByTagName("Comment");
-				WpRDFFunctionLibrary.addCommentTriples(pathwayModel, pwResource, commentElements, wpId, revision);
+				WpRDFFunctionLibrary.addCommentTriples(pathwayModel, pwResource, commentElements, wpId, revision);		
+				
 				// Get the Groups
 				NodeList groupElements = ((Element) pathwayElements.item(i)).getElementsByTagName("Group");
 				for (int n=0;n<groupElements.getLength(); n++){
 					WpRDFFunctionLibrary.addGroupTriples(pathwayModel, pwResource, groupElements.item(n), wpId, revision);
 				}
+	
 				// Get all the Datanodes
 				NodeList dataNodesElement = ((Element) pathwayElements.item(i)).getElementsByTagName("DataNode");
 				for (int j=0; j<dataNodesElement.getLength(); j++){
 					WpRDFFunctionLibrary.addDataNodeTriples(pathwayModel, pwResource, dataNodesElement.item(j), wpId, revision, bridgeDbmodel, mapper, openPhactsLinkSets);
 				}
+				
 				// Get all the lines
-				NodeList linesElement = ((Element) pathwayElements.item(i)).getElementsByTagName("Line");
+				NodeList linesElement = ((Element) pathwayElements.item(i)).getElementsByTagName("Interaction");
 				for (int k=0; k<linesElement.getLength(); k++){
 					WpRDFFunctionLibrary.addLineTriples(pathwayModel, pwResource, linesElement.item(k), wpId, revision);
 				}
+				
 				//Get all the labels
 				NodeList labelsElement = ((Element) pathwayElements.item(i)).getElementsByTagName("Label");
 				for (int l=0; l<labelsElement.getLength(); l++){
 					WpRDFFunctionLibrary.addLabelTriples(pathwayModel, pwResource, labelsElement.item(l), wpId, revision);
 				}
+				
+				//Get the references. There are three casing examples of publicationxref, that is why the call is repeated three times. 
 				NodeList referenceElements = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:PublicationXref");
 				for (int m=0; m<referenceElements.getLength(); m++){
 					WpRDFFunctionLibrary.addReferenceTriples(pathwayModel, pwResource, referenceElements.item(m), wpId, revision);
@@ -227,13 +136,15 @@ public class WP2RDFConversion {
 					WpRDFFunctionLibrary.addReferenceTriples(pathwayModel, pwResource, referenceElements3.item(m), wpId, revision);
 				}
 
+				//Get the ontologies.
 				NodeList ontologyElements = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:openControlledVocabulary");
 				for (int n=0; n<ontologyElements.getLength();n++){
 					WpRDFFunctionLibrary.addPathwayOntologyTriples(pathwayModel, pwResource, ontologyElements.item(n));
 				}
 				System.out.println(wpId);
-				basicCalls.saveRDF2File(pathwayModel, "/tmp/"+args[0]+"/"+wpId+"_r"+revision+".ttl", "TURTLE");
-
+				basicCalls.saveRDF2File(pathwayModel, "/tmp/OPSWPRDF/"+wpId+"_r"+revision+".ttl", "TURTLE");
+				//TODO OPSWPRDF should be stored in a preference file.
+				
 				model.add(pathwayModel);
 				pathwayModel.removeAll();
 			}
