@@ -10,11 +10,9 @@ This repo is a collection of all the files needed to run the wp2lod pipeline. Fo
 * Create a new project and point to cloned code
 * Add lib jars to Build Path
 * Specify (create?) src folder
-* Check BridgeDb file path in Pathway2RDFv2.java:91 (should point to derby files on local or server)
+* Check BridgeDb file path in WP2RDFConversion.java:91 (should point to derby files on local or server)
 * RunConfiguration: main=Pathway2RDFv2
 * File>Export>Runnable JAR file (to tmp/WP2Rdf.jar; expect warnings)
-* RunConfiguration: main=MergeGpmltoCache
-* File>Export>Runnable JAR file (to tmp/MergeGPML2WpGPMLXml.jar; expect warnings)
 
 ##Command line
 ```sh scripts/masterScript.sh``` (references runnable jars)
