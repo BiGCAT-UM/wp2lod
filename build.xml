@@ -2,6 +2,7 @@
 
  <target name="run" depends="dist">
   <java classname="WP2RDFConversion" fork="yes" failonerror="true">
+   <jvmarg value="-Xmx2G"/>
    <classpath>
     <fileset dir=".">
      <include name="WP2Rdf.jar" />
