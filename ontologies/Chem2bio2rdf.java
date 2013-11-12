@@ -202,7 +202,7 @@ public class Chem2bio2rdf {
      *  of DNA and RNA physical entities.) Here, we not only include gene but also 
      *  its gene expression products (e.g., protein, mRNA). Since chemogenomics is 
      *  often talking about the interactions between chemical and protein. In general, 
-     *  it’s assumed that the proteins expressed from the same gene have very similar 
+     *  it's assumed that the proteins expressed from the same gene have very similar 
      *  binding activity, so we often use compound XXX interacts with XXX (gene symbol) 
      *  in literature and other places. We cover pharmagenomics and toxigenomics as 
      *  well, which have the data that describes compound interacting gene indirectly. 
