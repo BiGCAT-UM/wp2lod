@@ -30,4 +30,3 @@ cd /tmp/OPSWIKIDUMP
 for file in $(ls); do unzip $file; done
 rm *.zip
 cd /tmp
-java -Xmx4G -jar WP2Rdf.jar 
