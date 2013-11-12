@@ -1,26 +1,29 @@
 <project name="WP2Rdf" default="dist" basedir=".">
 
- <target name="run">
-  <java classname="WP2RDFConversion" fork="yes" >
-  <classpath>
-   <fileset dir=".">
-    <include name="WP2Rdf.jar" />
-   </fileset>
-   <fileset dir="lib">
-    <include name="*.jar" />
-   </fileset>
-   <fileset dir="lib/wikipathways_client-2.0.11">
-    <include name="*.jar" />
-   </fileset>
-   <fileset dir="lib/Jena-2.6.4/lib/">
-    <include name="*.jar" />
-   </fileset>
-   <fileset dir="lib/bridgedb">
-    <include name="*.jar" />
-   </fileset>
-  </classpath>
- </java>
-</target>
+ <target name="run" depends="dist">
+  <java classname="WP2RDFConversion" fork="yes" failonerror="true">
+   <classpath>
+    <fileset dir=".">
+     <include name="WP2Rdf.jar" />
+    </fileset>
+    <fileset dir="lib">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/wikipathways_client-2.0.11">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/Jena-2.6.4/lib">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/bridgedb">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/commons-io-2.1">
+     <include name="*.jar" />
+    </fileset>
+   </classpath>
+  </java>
+ </target>
 
  <target name="dist" depends="compile">
   <jar jarfile="WP2Rdf.jar">
