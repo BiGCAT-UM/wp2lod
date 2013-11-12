@@ -35,7 +35,7 @@
             
  <target name="compile">
   <mkdir dir="build" />
-  <javac srcdir="." destdir="build" source="1.7" target="1.7">
+  <javac srcdir="." destdir="build" source="1.7" target="1.7" debug="true">
    <classpath>
     <fileset dir="lib"/>
    </classpath>
