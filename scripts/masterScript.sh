@@ -7,7 +7,6 @@ mkdir /tmp/OPSWIKIDUMP
 #rm -rf /tmp/OPSBRIDGEDB
 mkdir -p /tmp/OPSBRIDGEDB
 cp ../BioDataSource.ttl /tmp
-cp ../WP2Rdf.jar /tmp
 wget -O /tmp/OPSWIKIDUMP/Anopheles%20gambiae.zip "http://www.wikipathways.org//wpi/batchDownload.php?species=Anopheles%20gambiae&fileType=gpml&tag=Curation:AnalysisCollection"
 wget -O /tmp/OPSWIKIDUMP/Arabidopsis%20thaliana.zip "http://www.wikipathways.org//wpi/batchDownload.php?species=Arabidopsis%20thaliana&fileType=gpml&tag=Curation:AnalysisCollection"
 wget -O /tmp/OPSWIKIDUMP/Bos%20taurus.zip "http://www.wikipathways.org//wpi/batchDownload.php?species=Bos%20taurus&fileType=gpml&tag=Curation:AnalysisCollection"
