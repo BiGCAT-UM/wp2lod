@@ -54,4 +54,5 @@ cd /tmp/OPSBRIDGEDB
 for file in $(ls); do unzip $file; done
 #rm *.zip
 cd "${WORKSPACE}"
+cd ..
 ant run
