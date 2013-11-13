@@ -1,3 +1,4 @@
+export WORKSPACE=`pwd`
 rm -rf /tmp/GPML
 mkdir /tmp/GPML
 rm -rf /tmp/OPSWPRDF
@@ -52,4 +53,5 @@ cd /tmp
 cd /tmp/OPSBRIDGEDB
 for file in $(ls); do unzip $file; done
 #rm *.zip
-cd /tmp
+cd ${WORKSPACE}
+ant run
