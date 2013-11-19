@@ -46,6 +46,7 @@ wget -c -O /tmp/OPSBRIDGEDB/Rn_Derby_20120602.zip "http://bridgedb.org/data/gene
 wget -c -O /tmp/OPSBRIDGEDB/Sc_Derby_20120602.zip "http://bridgedb.org/data/gene_database/Sc_Derby_20120602.zip"
 wget -c -O /tmp/OPSBRIDGEDB/Zm_Derby_20120602.zip "http://bridgedb.org/data/gene_database/Zm_Derby_20120602.zip"
 wget -c -O /tmp/OPSBRIDGEDB/Gz_Derby_20120602.zip "http://bridgedb.org/data/gene_database/Gz_Derby_20120602.zip"
+wget -c -O /tmp/OPSBRIDGEDB/Gz_Derby_20120602.zip "http://bridgedb.org/data/gene_database/metabolites_20130627.bridge.zip"
 cd /tmp/OPSWIKIDUMP
 for file in $(ls); do unzip $file; done
 rm *.zip
