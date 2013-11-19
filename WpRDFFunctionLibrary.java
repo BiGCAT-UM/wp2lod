@@ -76,7 +76,7 @@ public class WpRDFFunctionLibrary {
 		File dir = new File("/tmp/OPSBRIDGEDB/"); //TODO Get Refector to get them directly form bridgedb.org
 		FilenameFilter filter = new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".bridgedb");
+		        return name.toLowerCase().endsWith(".bridge");
 		    }
 		};
 	
