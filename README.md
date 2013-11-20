@@ -6,6 +6,10 @@ This repo is a collection of all the files needed to run the wp2lod pipeline. Fo
 ##Command line
 ```git clone <paste wp2lod repo url>```
 
+##Set config properties
+* Rename config.properties.default to config.properties
+* Edit the ```config.properties``` with relevant file locations
+
 ##In Eclipse
 * Create a new project and point to cloned code
 * Add lib jars to Build Path
