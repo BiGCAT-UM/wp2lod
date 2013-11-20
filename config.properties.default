@@ -1,0 +1,14 @@
+#Fri Nov 08 14:42:37 CET 2013
+
+#bridgefiles points to the directory where the bridgeDb directories are stored
+#(e.g. ~/bridgedb/)
+bridgefiles=<YOUR LOCATION OF BRIDGEDB DATABASES HERE>
+
+#wikipathwaysDownloadDumps is the directory where the files downloaded from WikiPathways are stored
+# (e.g. /tmp/WikipathwaysDump)
+wikipathwaysDownloadDumps=<LOCATION WHERE DOWNLOADED PATHWAYS CAN BE STORED TEMPORARILY>
+
+#rdfRepository is the cache location where single rdf files for individual pathways are stored before being
+# concatenate in a single file
+# (e.g. /tmp/WPRDF
+rdfRepository=<LOCATION TO CACHE INTERMEDIATE RDF FILES>

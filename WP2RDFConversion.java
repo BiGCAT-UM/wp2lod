@@ -1,9 +1,12 @@
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Properties;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.rpc.ServiceException;
 import javax.xml.stream.XMLStreamException;
@@ -25,6 +28,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class WP2RDFConversion {
 
 	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException, ConverterException {	
+		
+		/* 
+		 * Set the preference for this to work on your local machine
+		 */
+		Properties prop = new Properties();
+		prop.load(new FileInputStream("config.properties"));
+	    
 		/* We keep a three dimensional type of versioning for the RDF dumps of WikiPathways.
 		 * First there is the software version. This indicates the incremental updates or changes in the code
 		 * responsible for the RDF generation (these files)
@@ -50,7 +60,7 @@ public class WP2RDFConversion {
 		 * mergeGpmltoSingleFile concatenates all files in a given directory into one file (i.e. /tmp/WpGPML.xml)
 		 */
 		// 
-		WpRDFFunctionLibrary.mergeGpmltoSingleFile("OPSWIKIDUMP/");	
+		WpRDFFunctionLibrary.mergeGpmltoSingleFile(prop.getProperty("wikipathwaysDownloadDumps"));	
 		Document wikiPathwaysDom = basicCalls.openXmlFile("/tmp/WpGPML.xml");
 		//TODO These parameters should not be part of the code, but belong in preferences files yet to be implemented.
 
@@ -71,7 +81,7 @@ public class WP2RDFConversion {
 		 * unified identifier uri are set. 
 		 */
 		Model bridgeDbmodel = WpRDFFunctionLibrary.createBridgeDbModel();
-		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper();
+		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper(prop);
 
 		
 		/* From here on the actual RDF conversion starts. The concatenated pathways into a single file is loaded and now
@@ -89,7 +99,7 @@ public class WP2RDFConversion {
             if (Integer.valueOf(revision) > latestRevision){
             	latestRevision = Integer.valueOf(revision);
             }
-			File f = new File("/tmp/OPSWPRDF/"+wpId+"_r"+revision+".ttl");
+			File f = new File(prop.getProperty("rdfRepository")+wpId+"_r"+revision+".ttl");
 			System.out.println(f.getName());
 			if(!f.exists()) {
 				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, pathwayElements.item(i), organismTaxonomy);				

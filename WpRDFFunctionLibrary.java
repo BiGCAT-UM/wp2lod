@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
 
@@ -70,10 +71,10 @@ public class WpRDFFunctionLibrary {
 	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException, ServiceException {
 		return new WikiPathwaysClient(new URL("http://www.wikipathways.org/wpi/webservice/webservice.php"));
 	}
-	public static IDMapperStack createBridgeDbMapper() throws ClassNotFoundException, IDMapperException{
+	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
 		Class.forName("org.bridgedb.rdb.IDMapperRdb");
-		File dir = new File("/home/wikipathways/database/"); //TODO Get Refector to get them directly form bridgedb.org
+		File dir = new File(prop.getProperty("bridgefiles")); //TODO Get Refector to get them directly form bridgedb.org
 		FilenameFilter filter = new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
 		        return name.toLowerCase().endsWith(".txt");
@@ -564,7 +565,7 @@ public class WpRDFFunctionLibrary {
 			lineResource.addLiteral(Gpml.zorder, zOrder);
 		}
 		lineResource.addProperty(DCTerms.isPartOf, pwResource);
-		lineResource.addProperty(RDF.type, Gpml.Line);
+		lineResource.addProperty(RDF.type, Gpml.Interaction);
 		if (lineGraphicsLineThickness!=null){
 			lineResource.addLiteral(Gpml.linethickness, lineGraphicsLineThickness);
 		}
@@ -883,7 +884,7 @@ public class WpRDFFunctionLibrary {
         XMLInputFactory xmlInFactory = XMLInputFactory.newFactory();
         
         	
-        File dir = new File("/tmp/"+gpmlLocation);
+        File dir = new File(gpmlLocation);
         
         File[] rootFiles = dir.listFiles();
         //the section below is only in case of analysis sets
