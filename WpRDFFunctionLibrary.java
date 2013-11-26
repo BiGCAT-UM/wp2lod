@@ -601,7 +601,7 @@ public class WpRDFFunctionLibrary {
 			}
 
 			if (arrowHead !=""){
-				lineResource.addProperty(Gpml.arrowTowards, graphRef);
+				lineResource.addLiteral(Gpml.arrowTowards, graphRef);
 				lineResource.addLiteral(Gpml.arrowHead, arrowHead);
 				arrowHeads.add(arrowHead);
 				arrowTowards.add(graphRef);
