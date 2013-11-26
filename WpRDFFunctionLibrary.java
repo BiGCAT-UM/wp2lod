@@ -600,7 +600,7 @@ public class WpRDFFunctionLibrary {
 				y =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelY").getTextContent().trim());
 			}
 
-			if (arrowHead !=""){
+			if ((arrowHead !="") && (graphRef!="")){
 				lineResource.addLiteral(Gpml.arrowTowards, graphRef);
 				lineResource.addLiteral(Gpml.arrowHead, arrowHead);
 				arrowHeads.add(arrowHead);
