@@ -1,9 +1,0 @@
-CONSTRUCT {
-    ?line wp:target ?targetUri .
-}
-{
-   ?line gpml:arrowTowards ?target .
-   ?line dcterms:isPartOf ?pathway .
-   ?targetUri gpml:graphid ?target .
-   ?targetUri dcterms:isPartOf ?pathway .
-}
