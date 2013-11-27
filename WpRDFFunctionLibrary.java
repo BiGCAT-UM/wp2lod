@@ -74,10 +74,10 @@ public class WpRDFFunctionLibrary {
 	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
 		Class.forName("org.bridgedb.rdb.IDMapperRdb");
-		File dir = new File(prop.getProperty("bridgefiles")); //TODO Get Refector to get them directly form bridgedb.org
+		File dir = new File("/tmp/OPSBRIDGEDB/"); //TODO Get Refector to get them directly form bridgedb.org
 		FilenameFilter filter = new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".txt");
+		        return name.toLowerCase().endsWith(".bridge");
 		    }
 		};
 	

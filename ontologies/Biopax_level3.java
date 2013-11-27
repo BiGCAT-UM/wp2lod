@@ -355,7 +355,7 @@ public class Biopax_level3 {
     
     /** <p>Definiiton: A reference to a term from an entity reference group ontology. 
      *  As of the writing of this documentation, there is no standard ontology of 
-     *  these terms, though a common type is ‘homology’.</p>
+     *  these terms, though a common type is 'homology'.</p>
      */
     public static final Resource EntityReferenceTypeVocabulary = m_model.createResource( "http://www.biopax.org/release/biopax-level3.owl#EntityReferenceTypeVocabulary" );
     
