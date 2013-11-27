@@ -600,8 +600,8 @@ public class WpRDFFunctionLibrary {
 				y =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelY").getTextContent().trim());
 			}
 
-			if (arrowHead !=""){
-				lineResource.addProperty(Gpml.arrowTowards, graphRef);
+			if ((arrowHead !="") && (graphRef!="")){
+				lineResource.addLiteral(Gpml.arrowTowards, graphRef);
 				lineResource.addLiteral(Gpml.arrowHead, arrowHead);
 				arrowHeads.add(arrowHead);
 				arrowTowards.add(graphRef);
@@ -942,7 +942,7 @@ public class WpRDFFunctionLibrary {
 	}
 	public static void addPathwayOntologyTriples(Model model, Resource pwResource, Node ontologyNode){
 		String identifier = basicCalls.getStringNodeContent(ontologyNode, "bp:ID");
-		pwResource.addProperty(Wp.pathwayOntology, model.createResource(constants.getOntologyURI(identifier).replace(":", "_").replace("http_", "http:"))); //TDOD discuss with Tina and Alex about what to do with this
+		pwResource.addProperty(Wp.pathwayOntology, model.createResource(constants.getOntologyURI(identifier).replace(":", "_").replace("http_", "http:").trim())); //TDOD discuss with Tina and Alex about what to do with this
 
 	}
 
