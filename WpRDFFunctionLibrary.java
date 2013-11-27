@@ -74,10 +74,10 @@ public class WpRDFFunctionLibrary {
 	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
 		Class.forName("org.bridgedb.rdb.IDMapperRdb");
-		File dir = new File("/tmp/OPSBRIDGEDB/"); //TODO Get Refector to get them directly form bridgedb.org
+		File dir = new File(prop.getProperty("bridgefiles")); //TODO Get Refector to get them directly form bridgedb.org
 		FilenameFilter filter = new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".bridge");
+		        return name.toLowerCase().endsWith(".txt");
 		    }
 		};
 	
@@ -583,7 +583,7 @@ public class WpRDFFunctionLibrary {
 			String graphRef = "";
 			if (points.item(i).getAttributes().getNamedItem("GraphRef") != null){
 				graphRef = points.item(i).getAttributes().getNamedItem("GraphRef").getTextContent().trim();
-				//TODO add graphref to model 
+				//TODO add graphref to model
 			}
 			Float relX =null;
 			Float relY = null;
@@ -600,8 +600,8 @@ public class WpRDFFunctionLibrary {
 				y =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelY").getTextContent().trim());
 			}
 
-			if ((arrowHead !="") && (graphRef!="")){
-				lineResource.addLiteral(Gpml.arrowTowards, graphRef);
+			if (arrowHead !=""){
+				lineResource.addProperty(Gpml.arrowTowards, graphRef);
 				lineResource.addLiteral(Gpml.arrowHead, arrowHead);
 				arrowHeads.add(arrowHead);
 				arrowTowards.add(graphRef);
@@ -942,7 +942,7 @@ public class WpRDFFunctionLibrary {
 	}
 	public static void addPathwayOntologyTriples(Model model, Resource pwResource, Node ontologyNode){
 		String identifier = basicCalls.getStringNodeContent(ontologyNode, "bp:ID");
-		pwResource.addProperty(Wp.pathwayOntology, model.createResource(constants.getOntologyURI(identifier).replace(":", "_").replace("http_", "http:").trim())); //TDOD discuss with Tina and Alex about what to do with this
+		pwResource.addProperty(Wp.pathwayOntology, model.createResource(constants.getOntologyURI(identifier).replace(":", "_").replace("http_", "http:"))); //TDOD discuss with Tina and Alex about what to do with this
 
 	}
 

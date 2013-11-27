@@ -6,26 +6,16 @@ This repo is a collection of all the files needed to run the wp2lod pipeline. Fo
 ##Command line
 ```git clone <paste wp2lod repo url>```
 
-
-##Set config properties
-* Rename config.properties.default to config.properties
-* Edit the ```config.properties``` with relevant file locations
-
-##Command line
-```sh scripts/masterScript.sh```
-
-This call will download the pathways and BridgeDb identifier mapping databases, compile the convertor code,
-and run this conversion.
-
 ##In Eclipse
-
-To work on the code in Eclipse, follow these steps:
-
 * Create a new project and point to cloned code
 * Add lib jars to Build Path
 * Specify (create?) src folder
 * Check BridgeDb file path in WP2RDFConversion.java:91 (should point to derby files on local or server)
 * RunConfiguration: main=Pathway2RDFv2
+* File>Export>Runnable JAR file (to tmp/WP2Rdf.jar; expect warnings)
+
+##Command line
+```sh scripts/masterScript.sh``` (references runnable jars)
 
 ##Ragamuffin
 * output files from pipeline:
