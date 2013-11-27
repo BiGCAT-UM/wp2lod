@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Properties;
+import java.util.Properties; 
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.rpc.ServiceException;
@@ -60,7 +60,7 @@ public class WP2RDFConversion {
 		 * mergeGpmltoSingleFile concatenates all files in a given directory into one file (i.e. /tmp/WpGPML.xml)
 		 */
 		// 
-		WpRDFFunctionLibrary.mergeGpmltoSingleFile(prop.getProperty("wikipathwaysDownloadDumps"));	
+                WpRDFFunctionLibrary.mergeGpmltoSingleFile(prop.getProperty("wikipathwaysDownloadDumps"));
 		Document wikiPathwaysDom = basicCalls.openXmlFile("/tmp/WpGPML.xml");
 		//TODO These parameters should not be part of the code, but belong in preferences files yet to be implemented.
 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="jar" name="WP2LOD" basedir="."> 
+
+    <!-- PROPERTIES -->
+
+	<!-- Source directory -->
+	<property name="src.dir" value="." />
+
+	<!-- Main class -->
+	<property name="main.class" value="WP2RDFConversion" />
+
+	<!-- Libraray directory -->
+	<property name="lib.dir" value="lib" />
+
+	<!-- Temporary build directories -->
+	<property name="build.dir" value="build" />
+	<property name="build.classes" value="${build.dir}/classes" />
+
+	<!-- Global "magic" property for <javac> -->
+	<property name="build.compiler" value="modern" />
+
+	<!-- Classpath with all lib JAR Files and all Cytoscape API classes -->
+	<path id="classpath">
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+    <!-- TARGETS -->
+
+	<!-- Target to create the build directories prior to compilation -->
+	<target name="prepare">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.classes}" />
+	</target>
+
+	<!--  Target to clean out all directories -->
+	<target name="clean" description="Removes all generated files.">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!--  Target to compile all App Code -->
+	<target name="compile" depends="prepare" description="Compiles source code.">
+		<javac debug="Yes" srcdir="${src.dir}" destdir="${build.classes}">
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<!-- Target to generate jar -->
+	<target name="jar" depends="compile" description="Generates JAR file.">
+          	<jar destfile="WP2RDF.jar" basedir="${build.classes}"> 
+			<manifest>
+       				<attribute name="Class-Path" value="${lib.dir}"/>
+        			<attribute name="Main-Class" value="${main.class}"/>
+      			</manifest>
+			<fileset dir="${build.classes}" includes="**/*.class" />
+			<fileset dir="${lib.dir}" includes="**/*.jar" />
+          	</jar>
+    	</target>
+</project>
