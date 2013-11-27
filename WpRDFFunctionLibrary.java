@@ -583,7 +583,7 @@ public class WpRDFFunctionLibrary {
 			String graphRef = "";
 			if (points.item(i).getAttributes().getNamedItem("GraphRef") != null){
 				graphRef = points.item(i).getAttributes().getNamedItem("GraphRef").getTextContent().trim();
-				//TODO add graphref to model
+				//TODO add graphref to model 
 			}
 			Float relX =null;
 			Float relY = null;
