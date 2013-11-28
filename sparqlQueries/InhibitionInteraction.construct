@@ -1,6 +1,5 @@
 # This CONSTRUCT query annotates WikiPathways Directed Interactions. 
 
-
 CONSTRUCT {
 	?line rdf:type wp:Inhibition .
 }
@@ -23,7 +22,7 @@ WHERE {
    				?line gpml:graphref ?dn1GraphId .
    				?line a gpml:Interaction .
    				?line gpml:arrowTowards ?target .
-   				?line gpml:arrowHead "Arrow"^^xsd:string .
+   				?line gpml:arrowHead "TBar"^^xsd:string .
    				?line gpml:graphid ?lineGraphId .
    				?line dcterms:isPartOf ?pathway .}}
    				FILTER (!regex(str(?datanode1), "noIdentifier")) .
