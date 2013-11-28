@@ -1,0 +1,30 @@
+# This CONSTRUCT query annotates WikiPathways unDirected Interactions. 
+
+CONSTRUCT {
+	?line rdf:type wp:undirectedInteraction .
+}
+WHERE {
+	?pathway dc:identifier ?wpIdentifier .{
+	SELECT DISTINCT * WHERE {
+		?datanode2 dc:identifier ?dn2Identifier .
+		?datanode2 a gpml:DataNode .
+		?datanode2 dcterms:isPartOf ?pathway .
+		?datanode2 gpml:graphid ?dn2GraphId .
+		?line gpml:graphref ?dn2GraphId .
+		FILTER (?datanode2 != ?datanode1) 
+		FILTER (!regex(str(?datanode2), "noIdentifier")) .
+		{ 
+			SELECT DISTINCT * WHERE {   
+   				?datanode1 dc:identifier ?dn1Identifier .
+   				?datanode1 gpml:graphid ?dn1GraphId .
+   				?datanode1 a gpml:DataNode .
+   				?datanode1 dcterms:isPartOf ?pathway .
+   				?line gpml:graphref ?dn1GraphId .
+   				?line a gpml:Interaction .
+   				?line gpml:graphid ?lineGraphId .
+   				?line dcterms:isPartOf ?pathway .}}
+   				FILTER (!regex(str(?datanode1), "noIdentifier")) .
+				FILTER NOT EXISTS {?line gpml:arrowHead ?arrowhead} .
+			}
+		}
+	}
