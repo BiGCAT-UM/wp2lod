@@ -24,9 +24,10 @@ WHERE {
    				?line a gpml:Interaction .
    				?line gpml:arrowTowards ?target .
    				?line gpml:arrowHead "mim-binding"^^xsd:string .
-   				?line gpml:graphid ?lineGraphId .
-   				?line dcterms:isPartOf ?pathway .}}
-   				FILTER (!regex(str(?datanode1), "noIdentifier")) .
+   				?line dcterms:isPartOf ?pathway .
 			}
 		}
+   		FILTER (!regex(str(?datanode1), "noIdentifier")) .
 	}
+}
+}

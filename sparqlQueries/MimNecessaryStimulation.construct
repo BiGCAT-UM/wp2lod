@@ -1,0 +1,26 @@
+# This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+
+CONSTRUCT {
+	?baseline wp:isCatalyzedBy ?stimulator .
+}
+WHERE {
+	?pathway dc:identifier ?wpIdentifier .{
+		SELECT DISTINCT * WHERE {
+			?stimulator dc:identifier ?dn2Identifier .
+			?stimulator a gpml:DataNode .
+			?stimulator dcterms:isPartOf ?pathway .
+			?stimulator gpml:graphid ?dn2GraphId .
+			?stimulationline gpml:graphref ?baselinegraphid .
+			?stimulationline gpml:arrowHead "mim-necessary-stimulation"^^xsd:string .
+			{ 
+				SELECT DISTINCT * WHERE {   
+					?baseline rdf:type wp:DirectedInteractions .
+					?baseline wp:source ?source .
+					?baseline wp:target ?target .
+					?baseline dcterms:isPartOf ?pathway .
+					?baseline gpml:graphid ?baselinegraphid .
+					}
+				}
+			}
+		}
+	}

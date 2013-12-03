@@ -1,0 +1,26 @@
+# This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+
+CONSTRUCT {
+	?baseline wp:isCleavedBy ?divisor .
+}
+WHERE {
+	?pathway dc:identifier ?wpIdentifier .{
+		SELECT DISTINCT * WHERE {
+			?divisor dc:identifier ?dn2Identifier .
+			?divisor a gpml:DataNode .
+			?divisor dcterms:isPartOf ?pathway .
+			?divisor gpml:graphid ?dn2GraphId .
+			?divisionline gpml:graphref ?baselinegraphid .
+			?divsionline gpml:arrowHead "mim-cleavage"^^xsd:string .
+			{ 
+				SELECT DISTINCT * WHERE {   
+					?baseline rdf:type wp:DirectedInteractions .
+					?baseline wp:source ?source .
+					?baseline wp:target ?target .
+					?baseline dcterms:isPartOf ?pathway .
+					?baseline gpml:graphid ?baselinegraphid .
+					}
+				}
+			}
+		}
+	}
