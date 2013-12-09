@@ -24,7 +24,6 @@ WHERE {
    				?line a gpml:Interaction .
    				?line gpml:arrowTowards ?target .
    				?line gpml:arrowHead "mim-inhibition"^^xsd:string .
-   				?line gpml:graphid ?lineGraphId .
    				?line dcterms:isPartOf ?pathway .}}
    				FILTER (!regex(str(?datanode1), "noIdentifier")) .
 			}
