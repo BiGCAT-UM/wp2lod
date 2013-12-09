@@ -733,7 +733,7 @@ public class WpRDFFunctionLibrary {
 			String anchorShape;
 			if (anchors.item(i).getAttributes().getNamedItem("Shape")!=null)
 				anchorResource.addLiteral(Gpml.anchorShape,anchors.item(i).getAttributes().getNamedItem("Shape").getTextContent().trim());
-			lineResource.addLiteral(Gpml.hasAnchor, anchorResource);
+			lineResource.addProperty(Gpml.hasAnchor, anchorResource);
 		}
 	}
 

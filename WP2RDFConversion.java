@@ -170,28 +170,30 @@ public class WP2RDFConversion {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String myDateString = sdf.format(myDate);
 		
-		BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
-
-	        StringBuilder sb = new StringBuilder();
-	        String line = constructQueryText.readLine();
-
-	        while (line != null) {
-	            sb.append(line);
-	            sb.append('\n');
-	            line = constructQueryText.readLine();
-	        }
-	        String queryText = sb.toString();
 		
-		Query query = QueryFactory.create(queryText);
-		QueryExecution queryExecution = QueryExecutionFactory.create(query, model);
-		Model results = queryExecution.execConstruct();
-		basicCalls.saveRDF2File(results, "/tmp/directedInteractions.ttl", "TURTLE");
 				
 		
 		FileUtils.writeStringToFile(new File("latestVersion.txt"), "v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString);
 		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
 		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
 		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+		BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
+
+        StringBuilder sb = new StringBuilder();
+        String line = constructQueryText.readLine();
+
+        while (line != null) {
+            sb.append(line);
+            sb.append('\n');
+            line = constructQueryText.readLine();
+        }
+        String queryText = sb.toString();
+	
+	Query query = QueryFactory.create(queryText);
+	QueryExecution queryExecution = QueryExecutionFactory.create(query, model);
+	Model results = queryExecution.execConstruct();
+	basicCalls.saveRDF2File(results, "/tmp/directedInteractions.ttl", "TURTLE");
+	
 	}
 
 }
