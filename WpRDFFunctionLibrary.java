@@ -218,6 +218,16 @@ public class WpRDFFunctionLibrary {
 			Resource unifiedEntrezGeneIdResource = model.createResource("http://identifiers.org/entrez.gene/"+unifiedEntrezGeneDataNodeIdentifier);
 			internalWPDataNodeResource.addProperty(Wp.bdbEntrezGene, unifiedEntrezGeneIdResource);
 		}
+		
+		//HGNC Symbols
+		Set<Xref> unifiedHGNCSymboXref = mapper.mapID(idXref, BioDataSource.ENTREZ_GENE);
+		Iterator<Xref> iterhgncsymbol = unifiedHGNCSymboXref.iterator();
+		while (iterhgncsymbol.hasNext()){
+			Xref unifiedHGNCSymbol = (Xref) iterhgncsymbol.next();
+			String unifiedHGNCSymbolDataNodeIdentifier = URLEncoder.encode(unifiedHGNCSymbol.getId(), "UTF-8");
+			Resource unifiedHGNCSymbolResource = model.createResource("http://identifiers.org/hgnc.symbol/"+unifiedHGNCSymbolDataNodeIdentifier);
+			internalWPDataNodeResource.addProperty(Wp.bdbHgncSymbol, unifiedHGNCSymbolResource);
+		}
 		//HMDB
 		Set<Xref> unifiedHmdbIdXref = mapper.mapID(idXref, BioDataSource.HMDB);
 		Iterator<Xref> iterHmdb = unifiedHmdbIdXref.iterator();

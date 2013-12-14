@@ -22,6 +22,8 @@ public class Wp {
     
     public static final Property bdbChemspider = m_model.createProperty( "http://vocabularies.wikipathways.org/wp#bdbChemspider" );
     
+    public static final Property bdbHgncSymbol = m_model.createProperty( "http://vocabularies.wikipathways.org/wp#bdbHgncSymbol" );
+    
     public static final Property bdbEnsembl = m_model.createProperty( "http://vocabularies.wikipathways.org/wp#bdbEnsembl" );
     
     public static final Property bdbEntrezGene = m_model.createProperty( "http://vocabularies.wikipathways.org/wp#bdbEntrezGene" );
