@@ -220,7 +220,7 @@ public class WpRDFFunctionLibrary {
 		}
 		
 		//HGNC Symbols
-		Set<Xref> unifiedHGNCSymboXref = mapper.mapID(idXref, BioDataSource.ENTREZ_GENE);
+		Set<Xref> unifiedHGNCSymboXref = mapper.mapID(idXref, BioDataSource.HUGO);
 		Iterator<Xref> iterhgncsymbol = unifiedHGNCSymboXref.iterator();
 		while (iterhgncsymbol.hasNext()){
 			Xref unifiedHGNCSymbol = (Xref) iterhgncsymbol.next();

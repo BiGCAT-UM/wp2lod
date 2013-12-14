@@ -189,11 +189,11 @@ public class WP2RDFConversion {
         }
         String queryText = sb.toString();
 	
-	Query query = QueryFactory.create(queryText);
+	/*Query query = QueryFactory.create(queryText);
 	QueryExecution queryExecution = QueryExecutionFactory.create(query, model);
 	Model results = queryExecution.execConstruct();
 	basicCalls.saveRDF2File(results, "/tmp/directedInteractions.ttl", "TURTLE");
-	
+	*/
 	}
 
 }
