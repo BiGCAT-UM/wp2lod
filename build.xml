@@ -1,0 +1,50 @@
+<project name="WP2Rdf" default="dist" basedir=".">
+
+ <target name="run" depends="dist">
+  <java classname="WP2RDFConversion" fork="yes" failonerror="true">
+   <jvmarg value="-Xmx2G"/>
+   <classpath>
+    <fileset dir=".">
+     <include name="WP2Rdf.jar" />
+    </fileset>
+    <fileset dir="lib">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/wikipathways_client-2.0.11">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/Jena-2.6.4/lib">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/bridgedb">
+     <include name="*.jar" />
+    </fileset>
+    <fileset dir="lib/commons-io-2.1">
+     <include name="*.jar" />
+    </fileset>
+   </classpath>
+  </java>
+ </target>
+
+ <target name="dist" depends="compile">
+  <jar jarfile="WP2Rdf.jar">
+   <fileset dir="build">
+    <include name="**/*" unless="module.buildfiles.present"/>
+   </fileset>
+   <manifest>
+    <attribute name="Main-Class" value="WP2RDFConversion"/>
+   </manifest>
+  </jar>
+ </target>
+            
+ <target name="compile">
+  <mkdir dir="build" />
+  <javac srcdir="." destdir="build" debug="true">
+   <classpath>
+    <fileset dir="lib"/>
+   </classpath>
+   <exclude name="lib/**/*" />
+  </javac>
+ </target>
+
+</project>

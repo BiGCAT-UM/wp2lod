@@ -1,3 +1,4 @@
+export WORKSPACE=`pwd`
 rm -rf /tmp/GPML
 mkdir /tmp/GPML
 rm -rf /tmp/OPSWPRDF
@@ -44,3 +45,7 @@ isql-vt -U dba -P dba -S 19755 "EXEC=DB.DBA.TTLP_MT (file_to_string_output ('$TT
 
 # infer the biological relations
 java -jar /tmp/inferDirection.jar 19755
+
+cd "${WORKSPACE}"
+cd ..
+ant run
