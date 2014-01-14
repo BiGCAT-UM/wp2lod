@@ -1,26 +1,30 @@
 # This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX gpml:    <http://vocabularies.wikipathways.org/gpml#>
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-	?baseline wp:isCatalyzedBy ?stimulator .
+	?baseline wp:isStimulatedBy ?datanode .
 }
+FROM <http://rdf.wikipathways.org/>
 WHERE {
-	?pathway dc:identifier ?wpIdentifier .{
-		SELECT DISTINCT * WHERE {
-			?stimulator dc:identifier ?dn2Identifier .
-			?stimulator a gpml:DataNode .
-			?stimulator dcterms:isPartOf ?pathway .
-			?stimulator gpml:graphid ?dn2GraphId .
-			?stimulationline gpml:graphref ?baselinegraphid .
-			?stimulationline gpml:arrowHead "mim-stimulation"^^xsd:string .
-			{ 
-				SELECT DISTINCT * WHERE {   
-					?baseline rdf:type wp:DirectedInteractions .
-					?baseline wp:source ?source .
-					?baseline wp:target ?target .
-					?baseline dcterms:isPartOf ?pathway .
-					?baseline gpml:graphid ?baselinegraphid .
-					}
-				}
-			}
-		}
-	}
+	?interactionline gpml:arrowHead "mim-stimulation"^^xsd:string .
+ 	?interactionline dcterms:isPartOf ?pathway .
+        
+    # baseline affected
+    ?baseline gpml:graphid ?edgeGraphId .
+    ?baseline dcterms:isPartOf ?pathway .
+
+	# DataNode 1   	
+   	?datanode gpml:graphid ?dn1GraphId .
+   	?datanode rdf:type gpml:DataNode .
+   	?datanode dcterms:isPartOf ?pathway .
+
+    ?interactionline gpml:graphref ?dn1GraphId .
+    ?interactionline gpml:graphref ?edgeGraphId .	
+    ?interactionline gpml:arrowTowards ?edgeGraphId .
+}
+

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,7 +90,8 @@ public class WP2RDFConversion {
 		 */
 		Model bridgeDbmodel = WpRDFFunctionLibrary.createBridgeDbModel();
 		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper(prop);
-
+		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
+        bridgeDbmodel.read(in, "", "TURTLE");
 		
 		/* From here on the actual RDF conversion starts. The concatenated pathways into a single file is loaded and now
 		 * being processed in a strait forward way. First the pathway information is converted into RDF and then each individual
@@ -177,7 +179,7 @@ public class WP2RDFConversion {
 		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
 		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
 		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
-		BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
+		/*BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
 
         StringBuilder sb = new StringBuilder();
         String line = constructQueryText.readLine();
@@ -188,6 +190,7 @@ public class WP2RDFConversion {
             line = constructQueryText.readLine();
         }
         String queryText = sb.toString();
+        */
 	
 	/*Query query = QueryFactory.create(queryText);
 	QueryExecution queryExecution = QueryExecutionFactory.create(query, model);

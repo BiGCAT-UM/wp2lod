@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -75,6 +76,12 @@ public class basicCalls {
 		FileOutputStream fout;
 		fout = new FileOutputStream(filename);
 		model.write(fout, format);
+	}
+	
+	public static void readRDFFromFile(Model model, String filename) throws FileNotFoundException{
+		FileInputStream fin;
+		fin= new FileInputStream(filename);
+		model.read(filename);
 	}
 
 	public static int xmlNodeExist(Element parent, String nodeName){

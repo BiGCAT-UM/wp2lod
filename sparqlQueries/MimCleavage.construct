@@ -1,26 +1,29 @@
 # This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX gpml:    <http://vocabularies.wikipathways.org/gpml#>
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-	?baseline wp:isCleavedBy ?divisor .
+	?baseline wp:isCleavedBy ?datanode .
 }
+FROM <http://rdf.wikipathways.org/>
 WHERE {
-	?pathway dc:identifier ?wpIdentifier .{
-		SELECT DISTINCT * WHERE {
-			?divisor dc:identifier ?dn2Identifier .
-			?divisor a gpml:DataNode .
-			?divisor dcterms:isPartOf ?pathway .
-			?divisor gpml:graphid ?dn2GraphId .
-			?divisionline gpml:graphref ?baselinegraphid .
-			?divsionline gpml:arrowHead "mim-cleavage"^^xsd:string .
-			{ 
-				SELECT DISTINCT * WHERE {   
-					?baseline rdf:type wp:DirectedInteractions .
-					?baseline wp:source ?source .
-					?baseline wp:target ?target .
-					?baseline dcterms:isPartOf ?pathway .
-					?baseline gpml:graphid ?baselinegraphid .
-					}
-				}
-			}
-		}
-	}
+	?interactionline gpml:arrowHead "mim-cleavage"^^xsd:string .
+ 	?interactionline dcterms:isPartOf ?pathway .
+        
+    # baseline affected
+    ?baseline gpml:graphid ?edgeGraphId .
+    ?baseline dcterms:isPartOf ?pathway .
+
+	# DataNode 1   	
+   	?datanode gpml:graphid ?dn1GraphId .
+   	?datanode rdf:type gpml:DataNode .
+   	?datanode dcterms:isPartOf ?pathway .
+
+    ?interactionline gpml:graphref ?dn1GraphId .
+    ?interactionline gpml:graphref ?edgeGraphId .	
+    ?interactionline gpml:arrowTowards ?edgeGraphId .
+}

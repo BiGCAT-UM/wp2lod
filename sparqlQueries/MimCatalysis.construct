@@ -1,26 +1,29 @@
 # This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX gpml:    <http://vocabularies.wikipathways.org/gpml#>
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-	?baseline wp:isCatalyzedBy ?catalyst .
+	?baseline wp:isCatalyzedBy ?datanode .
 }
+FROM <http://rdf.wikipathways.org/>
 WHERE {
-	?pathway dc:identifier ?wpIdentifier .{
-		SELECT DISTINCT * WHERE {
-			?catalyst dc:identifier ?dn2Identifier .
-			?catalyst a gpml:DataNode .
-			?catalyst dcterms:isPartOf ?pathway .
-			?catalyst gpml:graphid ?dn2GraphId .
-			?catalysisline gpml:graphref ?baselinegraphid .
-			?catalysisline gpml:arrowHead "mim-catalysis"^^xsd:string .
-			{ 
-				SELECT DISTINCT * WHERE {   
-					?baseline rdf:type wp:DirectedInteractions .
-					?baseline wp:source ?source .
-					?baseline wp:target ?target .
-					?baseline dcterms:isPartOf ?pathway .
-					?baseline gpml:graphid ?baselinegraphid .
-					}
-				}
-			}
-		}
-	}
+	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
+ 	?interactionline dcterms:isPartOf ?pathway .
+        
+    # baseline affected
+    ?baseline gpml:graphid ?edgeGraphId .
+    ?baseline dcterms:isPartOf ?pathway .
+
+	# DataNode 1   	
+   	?datanode gpml:graphid ?dn1GraphId .
+   	?datanode rdf:type gpml:DataNode .
+   	?datanode dcterms:isPartOf ?pathway .
+
+    ?interactionline gpml:graphref ?dn1GraphId .
+    ?interactionline gpml:graphref ?edgeGraphId .	
+    ?interactionline gpml:arrowTowards ?edgeGraphId .
+}
