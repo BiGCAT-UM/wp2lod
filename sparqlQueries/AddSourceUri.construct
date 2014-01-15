@@ -15,4 +15,5 @@ FROM <http://rdf.wikipathways.org/>
    ?sourceUri gpml:graphid ?dnGraphId .
    ?sourceUri dcterms:isPartOf ?pathway .
    FILTER (?dnGraphId != ?target)
+   FILTER (count(?dnGraphId) == 2)
 }
