@@ -29,4 +29,18 @@ cd /tmp/OPSWIKIDUMP
 for file in $(ls); do unzip $file; done
 rm *.zip
 cd /tmp
-java -Xmx4G -jar WP2Rdf.jar 
+
+# Generate the triples
+rm /tmp/wpContent*
+java -Xmx4G -jar WP2Rdf.jar
+
+#Empty the triplestore
+isql-vt -U dba -P dba -S 19755 "EXEC=RDF_GLOBAL_RESET ();"
+
+export TTLFILE=`ls /tmp/wpContent*`
+
+#Fill the triples store with the obtained triple
+isql-vt -U dba -P dba -S 19755 "EXEC=DB.DBA.TTLP_MT (file_to_string_output ('$TTLFILE'), '','http://rdf.wikipathways.org/')" 
+
+# infer the biological relations
+java -jar /tmp/inferDirection.jar 19755
