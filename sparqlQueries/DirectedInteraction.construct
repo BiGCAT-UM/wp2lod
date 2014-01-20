@@ -8,6 +8,7 @@ PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
 	?line rdf:type wp:DirectedInteraction .
+	?line rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/> 
 WHERE {
@@ -41,7 +42,5 @@ WHERE {
    	?line dcterms:isPartOf ?pathway .
    	?line gpml:arrowTowards ?target .
    	?line gpml:arrowHead "Arrow"^^xsd:string .
-   	?line gpml:graphid ?lineGraphId .
-   	
-   	
+   	?line gpml:graphid ?lineGraphId . 	
 	}

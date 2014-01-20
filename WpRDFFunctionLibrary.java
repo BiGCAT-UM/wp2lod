@@ -450,7 +450,7 @@ public class WpRDFFunctionLibrary {
 		}
 
 		Resource internalWPDataNodeResource = model.createResource("http://rdf.wikipathways.org/Pathway/"+wpId+"_r"+revId+"/DataNode/"+dataNodeGraphId);
-		Resource dataNodeResource = model.createResource(URLEncoder.encode(conceptUrl.replace("$id", dataNodeIdentifier), "UTF-8"));
+		Resource dataNodeResource = model.createResource(conceptUrl.replace("$id", dataNodeIdentifier));
 		Resource identifiersOrgResource= model.createResource();
 		if (dataNodeDataSource == ""){
 			internalWPDataNodeResource = model.createResource("http://rdf.wikipathways.org/Pathway/"+wpId+"_r"+revId+"/noDatasource/"+ UUID.randomUUID());
