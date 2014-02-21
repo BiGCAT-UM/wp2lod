@@ -8,22 +8,26 @@ PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
 	?baseline wp:isCatalyzedBy ?datanode .
+	?interactionline rdf:type wp:MimCatalysis .
+	?interactionline rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
 WHERE {
-	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
+    	# target baseline 
+    	?baseline gpml:graphid ?edgeGraphId .
+    	?baseline rdf:type gpml:Interaction .
+	?baseline rdf:type wp:DirectedInteraction .
+    	?baseline dcterms:isPartOf ?pathway .
+
+    	# source datanode    	
+    	?datanode gpml:graphid ?dnGraphId .
+    	?datanode rdf:type gpml:DataNode .
+    	?datanode dcterms:isPartOf ?pathway .
+    	
+    	# constructed interaction
  	?interactionline dcterms:isPartOf ?pathway .
-        
-    # baseline affected
-    ?baseline gpml:graphid ?edgeGraphId .
-    ?baseline dcterms:isPartOf ?pathway .
-
-	# DataNode 1   	
-   	?datanode gpml:graphid ?dn1GraphId .
-   	?datanode rdf:type gpml:DataNode .
-   	?datanode dcterms:isPartOf ?pathway .
-
-    ?interactionline gpml:graphref ?dn1GraphId .
-    ?interactionline gpml:graphref ?edgeGraphId .	
-    ?interactionline gpml:arrowTowards ?edgeGraphId .
+    	?interactionline gpml:graphref ?dnGraphId .
+    	?interactionline gpml:graphref ?edgeGraphId .	
+    	?interactionline gpml:arrowTowards ?edgeGraphId .
+	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
 }
