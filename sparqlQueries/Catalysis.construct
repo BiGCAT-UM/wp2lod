@@ -1,0 +1,33 @@
+# This CONSTRUCT query annotates WikiPathways Catalysis Interactions. 
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dc:      <http://purl.org/dc/elements/1.1/>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX gpml:    <http://vocabularies.wikipathways.org/gpml#>
+PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
+PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+CONSTRUCT {
+	?baseline wp:isCatalyzedBy ?datanode .
+	?interactionline rdf:type wp:MimCatalysis .
+	?interactionline rdf:type wp:relation .
+}
+FROM <http://rdf.wikipathways.org/>
+WHERE {
+    	# target baseline 
+    	?baseline gpml:graphid ?edgeGraphId .
+    	?baseline rdf:type gpml:Interaction .
+	?baseline rdf:type wp:DirectedInteraction .
+    	?baseline dcterms:isPartOf ?pathway .
+
+    	# source datanode    	
+    	?datanode gpml:graphid ?dnGraphId .
+    	?datanode rdf:type gpml:DataNode .
+    	?datanode dcterms:isPartOf ?pathway .
+    	
+    	# constructed interaction
+ 	?interactionline dcterms:isPartOf ?pathway .
+    	?interactionline gpml:graphref ?dnGraphId .
+    	?interactionline gpml:graphref ?edgeGraphId .	
+    	?interactionline gpml:arrowTowards ?edgeGraphId .
+	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
+}
