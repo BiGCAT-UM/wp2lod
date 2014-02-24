@@ -5,7 +5,6 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX gpml:    <http://vocabularies.wikipathways.org/gpml#>
 PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
-
 CONSTRUCT {
 	?line rdf:type wp:DirectedInteraction .
 	?line rdf:type wp:relation .
@@ -14,25 +13,25 @@ FROM <http://rdf.wikipathways.org/>
 WHERE {
 	# Get the pathway identifier
 	?pathway dc:identifier ?wpIdentifier .
-	
+
 	# An interaction is between 2 datanodes
 	# DataNode 1   	
 	?datanode1 dc:identifier ?dn1Identifier .
    	?datanode1 gpml:graphid ?dn1GraphId .
    	?datanode1 rdf:type gpml:DataNode .
    	?datanode1 dcterms:isPartOf ?pathway .
-	
+
 	# DataNode 2
 	?datanode2 dc:identifier ?dn2Identifier .
 	?datanode2 rdf:type gpml:DataNode .
 	?datanode2 dcterms:isPartOf ?pathway .
 	?datanode2 gpml:graphid ?dn2GraphId .
-	
+
 	# A line is linked to a DataNodes by it graphref.
 	?line gpml:graphref ?dn1GraphId .
 	?line gpml:graphref ?dn2GraphId .
 	FILTER (?datanode2 != ?datanode1) 
-	
+
 	# Some DataNodes don't contain an identifier
 	FILTER (!regex(str(?datanode2), "noIdentifier")) .  
     FILTER (!regex(str(?datanode1), "noIdentifier")) .
@@ -40,7 +39,14 @@ WHERE {
    	# The base of an interaction is the line of type gpml:Interaction
    	?line rdf:type gpml:Interaction .
    	?line dcterms:isPartOf ?pathway .
-   	?line gpml:arrowTowards ?target .
-   	?line gpml:arrowHead "Arrow"^^xsd:string .
-   	?line gpml:graphid ?lineGraphId . 	
+   	?line gpml:graphid ?lineGraphId . 
+
+        # Directionality is captured in the Points attached to 
+        # a line. Since both datanodes can be a target of a direction
+        # we need to use a UNION to capture both
+        ?point rdf:type gpml:Point .
+        ?point dcterms:isPartOf ?line .
+        ?point gpml:arrowHead "Arrow"^^xsd:string .
+        {{?point gpml:graphref ?dn2GraphId .} UNION {?point gpml:graphref ?dn1GraphId}}.
+        
 	}
