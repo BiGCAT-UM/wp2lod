@@ -26,20 +26,19 @@ WHERE {
 	?datanode2 rdf:type gpml:DataNode .
 	?datanode2 dcterms:isPartOf ?pathway .
 	?datanode2 gpml:graphid ?dn2GraphId .
-
-	# A line is linked to a DataNodes by it graphref.
-	?line gpml:graphref ?dn1GraphId .
-	?line gpml:graphref ?dn2GraphId .
-	FILTER (?datanode2 != ?datanode1) 
-
+	
 	# Some DataNodes don't contain an identifier
 	FILTER (!regex(str(?datanode2), "noIdentifier")) .  
-    FILTER (!regex(str(?datanode1), "noIdentifier")) .
-   	
+        FILTER (!regex(str(?datanode1), "noIdentifier")) .
+
    	# The base of an interaction is the line of type gpml:Interaction
    	?line rdf:type gpml:Interaction .
    	?line dcterms:isPartOf ?pathway .
    	?line gpml:graphid ?lineGraphId . 
+   	# A line is linked to a DataNodes by it graphref.
+	?line gpml:graphref ?dn1GraphId .
+	?line gpml:graphref ?dn2GraphId .
+	FILTER (?datanode2 != ?datanode1)
 
         # Directionality is captured in the Points attached to 
         # a line. Since both datanodes can be a target of a direction
