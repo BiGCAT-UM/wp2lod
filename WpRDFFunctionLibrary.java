@@ -267,6 +267,7 @@ public class WpRDFFunctionLibrary {
 		WikiPathwaysClient wpClient = startWpApiClient();
 		String[] wpOrganisms = wpClient.listOrganisms();
 		for (String organism : wpOrganisms){
+			System.out.println(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
 			Document taxonomy = basicCalls.openXmlURL(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
 			String ncbiTaxonomy = taxonomy.getElementsByTagName("Id").item(0).getTextContent().trim();
 			hm.put(organism, ncbiTaxonomy);
@@ -435,7 +436,7 @@ public class WpRDFFunctionLibrary {
 				identifiersorgURI = solution.get("identifiers_org_base").toString();
 			}
 		}
-		String conceptUrl = "http://rdf.wikipathways.org/error/$id"; // The ConceptUrl is the main URI for a given skos:concept in WikiPathways
+		String conceptUrl = "http://rdf.wikipathways.org/error/$id"; 
 		if (sourceRDFURI!= null) {
 			conceptUrl = sourceRDFURI;
 		} else if (bio2RdfURI != null){
@@ -586,36 +587,44 @@ public class WpRDFFunctionLibrary {
 		List<String> arrowTowards = new ArrayList<String>(); 	
 		for (int i=0; i<points.getLength(); i++){
 			String arrowHead = "";
+			Resource pointResource = model.createResource("http://rdf.wikipathways.org/Pathway/"+wpId+"_r"+revId+"/Point/"+String.valueOf(UUID.randomUUID()));
+			pointResource.addProperty(RDF.type, Gpml.Point);
+			pointResource.addProperty(DCTerms.isPartOf, lineResource);
 			if (points.item(i).getAttributes().getNamedItem("ArrowHead")!= null){ 
 				arrowHead = points.item(i).getAttributes().getNamedItem("ArrowHead").getTextContent().trim();
-
+				pointResource.addLiteral(Gpml.arrowHead, arrowHead);
 			}
+			
 			String graphRef = "";
 			if (points.item(i).getAttributes().getNamedItem("GraphRef") != null){
 				graphRef = points.item(i).getAttributes().getNamedItem("GraphRef").getTextContent().trim();
-				//TODO add graphref to model
+				pointResource.addLiteral(Gpml.graphref, graphRef);
 			}
 			Float relX =null;
 			Float relY = null;
 			if ((points.item(i).getAttributes().getNamedItem("RelX") != null) &&  (points.item(i).getAttributes().getNamedItem("RelY") != null)) {
 				relX =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelX").getTextContent().trim());
 				relY =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelY").getTextContent().trim());
-				lineResource.addLiteral(Gpml.relX, relX);
-				lineResource.addLiteral(Gpml.relY, relY);
+				pointResource.addLiteral(Gpml.relX, relX);
+				pointResource.addLiteral(Gpml.relY, relY);
 			}
 			Float x =null;
 			Float y = null;
 			if ((points.item(i).getAttributes().getNamedItem("RelX") != null) &&  (points.item(i).getAttributes().getNamedItem("RelY") != null)) {
 				x =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelX").getTextContent().trim());
 				y =Float.valueOf(points.item(i).getAttributes().getNamedItem("RelY").getTextContent().trim());
+				pointResource.addLiteral(Gpml.x, x);
+				pointResource.addLiteral(Gpml.y, y);
 			}
 
-			if ((arrowHead !="") && (graphRef!="")){
+			/*if ((arrowHead !="") && (graphRef!="")){
 				lineResource.addLiteral(Gpml.arrowTowards, graphRef);
+				// TODO add point resource
 				lineResource.addLiteral(Gpml.arrowHead, arrowHead);
 				arrowHeads.add(arrowHead);
 				arrowTowards.add(graphRef);
 			}
+			*/
 			if ((graphRef != null) && (graphRef != "" )){
 				lineResource.addLiteral(Gpml.graphref, graphRef);
 				graphRefs.add(graphRef);
