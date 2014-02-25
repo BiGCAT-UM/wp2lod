@@ -10,24 +10,47 @@ CONSTRUCT {
 	?line rdf:type wp:UnDirectedInteraction .
 	?line rdf:type wp:relation .
 }
-FROM <http://rdf.wikipathways.org/>
+FROM <http://rdf.wikipathways.org/> 
 WHERE {
+	# Get the pathway identifier
 	?pathway dc:identifier ?wpIdentifier .
-	?datanode2 dc:identifier ?dn2Identifier .
-	?datanode2 a gpml:DataNode .
-	?datanode2 dcterms:isPartOf ?pathway .
-	?datanode2 gpml:graphid ?dn2GraphId .
-	?line gpml:graphref ?dn2GraphId .
-	FILTER (?datanode2 != ?datanode1) 
-	FILTER (!regex(str(?datanode2), "noIdentifier")) .
+
+	# An interaction is between 2 datanodes
+	# DataNode 1   	
 	?datanode1 dc:identifier ?dn1Identifier .
    	?datanode1 gpml:graphid ?dn1GraphId .
-   	?datanode1 a gpml:DataNode .
+   	?datanode1 rdf:type gpml:DataNode .
    	?datanode1 dcterms:isPartOf ?pathway .
-   	?line gpml:graphref ?dn1GraphId .
-   	?line a gpml:Interaction .
-   	?line gpml:graphid ?lineGraphId .
+
+	# DataNode 2
+	?datanode2 dc:identifier ?dn2Identifier .
+	?datanode2 rdf:type gpml:DataNode .
+	?datanode2 dcterms:isPartOf ?pathway .
+	?datanode2 gpml:graphid ?dn2GraphId .
+
+	# A line is linked to a DataNodes by it graphref.
+	?line gpml:graphref ?dn1GraphId .
+	?line gpml:graphref ?dn2GraphId .
+	FILTER (?datanode2 != ?datanode1) 
+
+	# Some DataNodes don't contain an identifier
+	FILTER (!regex(str(?datanode2), "noIdentifier")) .  
+    FILTER (!regex(str(?datanode1), "noIdentifier")) .
+   	
+   	# The base of an interaction is the line of type gpml:Interaction
+   	?line rdf:type gpml:Interaction .
    	?line dcterms:isPartOf ?pathway .
-   	FILTER (!regex(str(?datanode1), "noIdentifier")) .
-   	MINUS {?line gpml:arrowHead ?arrowhead}
-	}  
+   	?line gpml:graphid ?lineGraphId . 
+
+       
+        ?pointleft rdf:type gpml:Point .
+        ?pointleft dcterms:isPartOf ?line .
+        ?pointleft gpml:graphref ?dn1GraphId .
+        MINUS {?pointleft gpml:arrowHead ?arrowHeadleft .}
+
+        ?pointright rdf:type gpml:Point .
+        ?pointright dcterms:isPartOf ?line .
+        ?pointright gpml:graphref ?dn2GraphId .
+        MINUS {?pointright gpml:arrowHead ?arrowHeadright .}
+        	
+	} 

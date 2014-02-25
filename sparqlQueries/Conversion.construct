@@ -7,27 +7,30 @@ PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-	?line rdf:type wp:MimBinding .
+	?line rdf:type wp:Conversion .
 	?line rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
 WHERE {
 	?pathway dc:identifier ?wpIdentifier .
-	?datanode2 dc:identifier ?dn2Identifier .
-	?datanode2 a gpml:DataNode .
-	?datanode2 dcterms:isPartOf ?pathway .
-	?datanode2 gpml:graphid ?dn2GraphId .
-	?line gpml:graphref ?dn2GraphId .
-	FILTER (?datanode2 != ?datanode1) 
-	FILTER (!regex(str(?datanode2), "noIdentifier")) .
 	?datanode1 dc:identifier ?dn1Identifier .
 	?datanode1 gpml:graphid ?dn1GraphId .
 	?datanode1 a gpml:DataNode .
+	?datanode1 a wp:Metabolite .
 	?datanode1 dcterms:isPartOf ?pathway .
+	FILTER (!regex(str(?datanode1), "noIdentifier")) .
 	?line gpml:graphref ?dn1GraphId .
+	?datanode2 dc:identifier ?dn2Identifier .
+	?datanode2 a gpml:DataNode .
+	?datanode2 a wp:Metabolite .
+	?datanode2 dcterms:isPartOf ?pathway .
+	?datanode2 gpml:graphid ?dn2GraphId .
+	FILTER (!regex(str(?datanode2), "noIdentifier")) .	
+	FILTER (?datanode2 != ?datanode1) 
+	?line gpml:graphref ?dn2GraphId .
 	?line a gpml:Interaction .
 	?line gpml:arrowTowards ?target .
-	?line gpml:arrowHead "mim-binding"^^xsd:string .
+	?line gpml:arrowHead "mim-conversion"^^xsd:string .
+	?line gpml:graphid ?lineGraphId .
 	?line dcterms:isPartOf ?pathway .
-	FILTER (!regex(str(?datanode1), "noIdentifier")) .
-}
+	}
