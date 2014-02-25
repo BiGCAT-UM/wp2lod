@@ -8,7 +8,7 @@ PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
 	?baseline wp:isCatalyzedBy ?datanode .
-	?interactionline rdf:type wp:MimCatalysis .
+	?interactionline rdf:type wp:Catalysis .
 	?interactionline rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
