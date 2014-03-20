@@ -1,5 +1,5 @@
 # Interaction hierarchy in WikiPathways
-*. wp:relation
- *. wp:unDirectedInteration
- *. wp:DirectedInteraction
+- wp:relation
+ - wp:unDirectedInteration
+ * wp:DirectedInteraction
  
