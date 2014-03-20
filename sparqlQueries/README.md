@@ -38,7 +38,7 @@ SELECT * WHERE {
         # we need to use a UNION to capture both
         ?point rdf:type gpml:Point .
         ?point dcterms:isPartOf ?line .
-        ?point gpml:arrowHead "Arrow"^^xsd:string .
+        ?point gpml:arrowHead "TBar"^^xsd:string .
         {{?point gpml:graphref ?dn2GraphId .} UNION {?point gpml:graphref ?dn1GraphId}}.
         
 	}
