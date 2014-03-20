@@ -7,6 +7,7 @@ PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
+	?baseline rdf:type wp:AffectedInteraction .
 	?baseline wp:isStimulatedBy ?datanode .
 }
 FROM <http://rdf.wikipathways.org/>
