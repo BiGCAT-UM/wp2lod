@@ -41,7 +41,7 @@ SELECT * WHERE {
         ?point gpml:arrowHead "TBar"^^xsd:string .
         {{?point gpml:graphref ?dn2GraphId .} UNION {?point gpml:graphref ?dn1GraphId}}.
         
-	}
+}
 ``` 
 
 
