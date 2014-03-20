@@ -1,12 +1,14 @@
 # Interaction hierarchy in WikiPathways
 - wp:relation
- - wp:unDirectedInteration
- - wp:DirectedInteraction
+  - wp:unDirectedInteration
+  - wp:DirectedInteraction
    - wp:Inhibition
    - wp:TranscriptionTranslation
    - wp:Modification
    - wp:Conversion
- - wp:AffectedInteraction
-    - wp:Stimulation
-    - wp:NecessaryStimulation
-    - wp:Cleavage
+  - wp:AffectedInteraction
+   - wp:Stimulation
+   - wp:NecessaryStimulation
+   - wp:Cleavage
+   - wp:Catalysis
+ 
