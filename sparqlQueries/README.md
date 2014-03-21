@@ -1,3 +1,6 @@
+![GitHub Logo](https://github.com/images/logo.png)
+Format: ![Alt Text](url)
+
 # Introduction 
 The rdf representation of Pathways in WikiPathways are created by serializing GPML. After completion of the RDF creation, bioloigical interactions are extracted by inference through so-called CONSTRUCT queries. WikiPathways captures different biological relations. These are captured as a arrowhead property in the lines drawn. The directionality of the relationship is captured by a GraphRef property of the same line. 
 
