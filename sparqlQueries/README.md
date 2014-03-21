@@ -5,7 +5,7 @@ To extract a specific biological relation (e.g. Inhibition), one need to describ
 
 The SPARQL query below, will extract all inhibitions drawn into WikiPathways. 
 
-```sparql
+```
 SELECT * WHERE {
 	# Get the pathway identifier
 	?pathway dc:identifier ?wpIdentifier .
