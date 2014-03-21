@@ -1,4 +1,3 @@
-
 # Introduction 
 The rdf representation of Pathways in WikiPathways are created by serializing GPML. After completion of the RDF creation, bioloigical interactions are extracted by inference through so-called CONSTRUCT queries. WikiPathways captures different biological relations. These are captured as a arrowhead property in the lines drawn. The directionality of the relationship is captured by a GraphRef property of the same line. 
 
@@ -338,8 +337,46 @@ The triple recognizing the basic directed relation is:
 	?point gpml:arrowHead "mim-transcription-translation"^^xsd:string .
 ```
 ### The affected interaction
+An affected interaction is one of the above-mentioned types being affected by another pathway element. An example of such an interaction is a catalysis where a specific directed relation is catalysed by a catalyst. 
 
+![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCatalysis.png)
 
+The following CONSTRUCT query will annotate all catalysi accordingly
+
+```
+CONSTRUCT {
+	?baseline wp:isCatalyzedBy ?datanode .
+	?interactionline rdf:type wp:Catalysis .
+	?interactionline rdf:type wp:relation .
+}
+FROM <http://rdf.wikipathways.org/>
+WHERE {
+    	# target baseline 
+    	?baseline gpml:graphid ?edgeGraphId .
+    	?baseline rdf:type gpml:Interaction .
+	?baseline rdf:type wp:DirectedInteraction .
+    	?baseline dcterms:isPartOf ?pathway .
+
+    	# source datanode    	
+    	?datanode gpml:graphid ?dnGraphId .
+    	?datanode rdf:type gpml:DataNode .
+    	?datanode dcterms:isPartOf ?pathway .
+    	
+    	# constructed interaction
+ 	?interactionline dcterms:isPartOf ?pathway .
+    	?interactionline gpml:graphref ?dnGraphId .
+    	?interactionline gpml:graphref ?edgeGraphId .	
+    	?interactionline gpml:arrowTowards ?edgeGraphId .
+	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
+}
+```
+
+The following affected relation types are recognized:
+
+#### A Catalysis
+![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCatalysis.png)
+
+A Catalysis is where a 
 
 * wp:relation
  * wp:unDirectedInteration
