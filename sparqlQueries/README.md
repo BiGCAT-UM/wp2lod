@@ -1,4 +1,4 @@
-![GitHub Logo](https://github.com/images/logo.png)
+![GitHub Logo](http://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Pathways_%28126039087%29.jpg/159px-Pathways_%28126039087%29.jpg)
 Format: ![Alt Text](url)
 
 # Introduction 
