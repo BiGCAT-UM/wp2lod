@@ -1,5 +1,4 @@
-![GitHub Logo](http://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Pathways_%28126039087%29.jpg/159px-Pathways_%28126039087%29.jpg)
-Format: ![Alt Text](url)
+
 
 # Introduction 
 The rdf representation of Pathways in WikiPathways are created by serializing GPML. After completion of the RDF creation, bioloigical interactions are extracted by inference through so-called CONSTRUCT queries. WikiPathways captures different biological relations. These are captured as a arrowhead property in the lines drawn. The directionality of the relationship is captured by a GraphRef property of the same line. 
@@ -181,6 +180,8 @@ In WikiPathways 13 different types of relations are recognised. All are of type 
 ### The undirected relation
 The undirected relation is a relation type which doesn't contain any directionality. A relationship is drawn as a line without specific attributes.
 ### The directed relation
+
+![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/Arrow.png)
 The directed interaction is one that does contain directionality. The directionality is captured by an arrowhead indicating a specific subtype of directionality (e.g. Inhibition, Conversion, etc.). The CONSTRUCT query to extract a directed interaction are similar to each except for one triple where the distinctive arrowhead is expressed. 
 
 ```
