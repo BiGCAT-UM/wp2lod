@@ -8,8 +8,8 @@ PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
 	?baseline wp:isCatalyzedBy ?datanode .
-	?interactionline rdf:type wp:Catalysis .
-	?interactionline rdf:type wp:relation .
+	?baseline rdf:type wp:Catalysis .
+	?baseline rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
 WHERE {
@@ -25,9 +25,9 @@ WHERE {
     	?datanode dcterms:isPartOf ?pathway .
     	
     	# constructed interaction
- 	?interactionline dcterms:isPartOf ?pathway .
-    	?interactionline gpml:graphref ?dnGraphId .
-    	?interactionline gpml:graphref ?edgeGraphId .	
-    	?interactionline gpml:arrowTowards ?edgeGraphId .
-	?interactionline gpml:arrowHead "mim-catalysis"^^xsd:string .
+ 	?baseline dcterms:isPartOf ?pathway .
+    	?baseline gpml:graphref ?dnGraphId .
+    	?baseline gpml:graphref ?edgeGraphId .	
+    	?baseline gpml:arrowTowards ?edgeGraphId .
+	?baseline gpml:arrowHead "mim-catalysis"^^xsd:string .
 }
