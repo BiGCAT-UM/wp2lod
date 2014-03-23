@@ -264,7 +264,7 @@ The triples in the CONSTRUCT header:
 	?line rdf:type wp:Relation .
 ```
 
-The triple recognizing the basic directed relation is:
+The triple recognizing the inhibition relation is:
 ```
 	?point gpml:arrowHead "TBar"^^xsd:string .
 ```
@@ -297,7 +297,7 @@ The triples in the CONSTRUCT header:
 	?line rdf:type wp:Relation .
 ```
 
-The triple recognizing the basic directed relation is:
+The triple recognizing the conversion relation is:
 ```
 	?point gpml:arrowHead "mim-conversion"^^xsd:string .
 ```
@@ -314,7 +314,7 @@ The triples in the CONSTRUCT header:
 	?line rdf:type wp:Relation .
 ```
 
-The triple recognizing the basic directed relation is:
+The triple recognizing the modification relation is:
 ```
 	?point gpml:arrowHead "mim-modification"^^xsd:string .
 ```
@@ -332,7 +332,7 @@ The triples in the CONSTRUCT header:
 	?line rdf:type wp:Relation .
 ```
 
-The triple recognizing the basic directed relation is:
+The triple recognizing the transcription translation relation is:
 ```
 	?point gpml:arrowHead "mim-transcription-translation"^^xsd:string .
 ```
@@ -374,9 +374,78 @@ WHERE {
 The following affected relation types are recognized:
 
 #### A Catalysis
-![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCatalysis.png)
+![Catalysis](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCatalysis.png)
 
-A Catalysis is where a 
+The Catalysis is an affected interaction expressed by a mim-catalysis as arrow head. 
+The triples in the CONSTRUCT header:
+```
+CONSTRUCT {
+	?baseline wp:isCatalyzedBy ?datanode .
+	?interactionline rdf:type wp:Catalysis .
+	?interactionline rdf:type wp:relation .
+}
+```
+
+The triple recognizing the catalysis relation is:
+```
+	?point gpml:arrowHead "mim-catalysis"^^xsd:string .
+```
+
+#### A Cleavage
+![Cleavage(https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCleavage.png)
+
+The Cleavage is an affected interaction expressed by a mim-cleavage as arrow head. 
+The triples in the CONSTRUCT header:
+```
+CONSTRUCT {
+	?baseline wp:isCleavedBy ?datanode .
+	?interactionline rdf:type wp:Cleavage .
+	?interactionline rdf:type wp:relation .
+}
+```
+
+The triple recognizing the transcription translation relation is:
+```
+	?point gpml:arrowHead "mim-cleavage"^^xsd:string .
+```
+
+#### Stimulation
+![Stimulation](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimStimulation.png)
+
+The stimulation is an affected interaction expressed by a mim-stimulation as arrow head. 
+The triples in the CONSTRUCT header:
+```
+CONSTRUCT {
+	?baseline wp:isStimulatedBy ?datanode .
+	?interactionline rdf:type wp:Stimulation .
+	?interactionline rdf:type wp:relation .
+}
+```
+
+The triple recognizing the stimulation relation is:
+```
+	?point gpml:arrowHead "mim-stimulation"^^xsd:string .
+```
+
+#### Necessary Stimulation
+![Necessary Stimulation](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimNecessaryStimulation.png)
+
+The necessary stimulation is an affected interaction expressed by a mim-necessary-stimulation as arrow head. 
+The triples in the CONSTRUCT header:
+```
+CONSTRUCT {
+	?baseline wp:isStimulatedBy ?datanode .
+	?interactionline rdf:type wp:Stimulation .
+	?interactionline rdf:type wp:relation .
+}
+```
+
+The triple recognizing the necessary stimulation relation is:
+```
+	?point gpml:arrowHead "mim-necessary-stimulation"^^xsd:string .
+```
+
+
 
 * wp:relation
  * wp:unDirectedInteration
