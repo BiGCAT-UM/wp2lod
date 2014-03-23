@@ -392,7 +392,7 @@ The triple recognizing the catalysis relation is:
 ```
 
 #### A Cleavage
-![Cleavage(https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCleavage.png)
+![Cleavage](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCleavage.png)
 
 The Cleavage is an affected interaction expressed by a mim-cleavage as arrow head. 
 The triples in the CONSTRUCT header:
