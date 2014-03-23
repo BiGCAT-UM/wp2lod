@@ -8,7 +8,8 @@ PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
 	?baseline wp:isCatalyzedBy ?datanode .
-	?baseline rdf:type wp:Catalysis .
+	?baseline dcterms:isPartOf wp:Catalysis .
+	?baseline rdf:type wp:affectedRelation .
 	?baseline rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
