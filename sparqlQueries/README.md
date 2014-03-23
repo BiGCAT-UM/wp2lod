@@ -1,6 +1,7 @@
 # Introduction 
 The rdf representation of Pathways in WikiPathways are created by serializing GPML. After completion of the RDF creation, bioloigical interactions are extracted by inference through so-called CONSTRUCT queries. WikiPathways captures different biological relations. These are captured as a arrowhead property in the lines drawn. The directionality of the relationship is captured by a GraphRef property of the same line. 
 
+
 To extract a specific biological relation (e.g. Inhibition), one need to describe these diffent properties in a Sparql query.
 
 The SPARQL query below, will extract all inhibitions drawn into WikiPathways. 
@@ -176,7 +177,58 @@ NOTE: For the above query to function yet another CONSTRUCT query is needed to i
 # Interaction hierarchy in WikiPathways
 In WikiPathways 13 different types of relations are recognised. All are of type wp:relation. Then we have three main relation types, being: 
 ### The undirected relation
-The undirected relation is a relation type which doesn't contain any directionality. A relationship is drawn as a line without specific attributes.
+The undirected relation is a relation type which doesn't contain any directionality. A relationship is drawn as a line without specific attributes. The construct query to extract an undirected relation is:
+
+````
+CONSTRUCT {
+	?line rdf:type wp:UnDirectedInteraction .
+	?line rdf:type wp:relation .
+}
+FROM <http://rdf.wikipathways.org/> 
+WHERE {
+	# Get the pathway identifier
+	?pathway dc:identifier ?wpIdentifier .
+
+	# An interaction is between 2 datanodes
+	# DataNode 1   	
+	?datanode1 dc:identifier ?dn1Identifier .
+   	?datanode1 gpml:graphid ?dn1GraphId .
+   	?datanode1 rdf:type gpml:DataNode .
+   	?datanode1 dcterms:isPartOf ?pathway .
+
+	# DataNode 2
+	?datanode2 dc:identifier ?dn2Identifier .
+	?datanode2 rdf:type gpml:DataNode .
+	?datanode2 dcterms:isPartOf ?pathway .
+	?datanode2 gpml:graphid ?dn2GraphId .
+
+	# A line is linked to a DataNodes by it graphref.
+	?line gpml:graphref ?dn1GraphId .
+	?line gpml:graphref ?dn2GraphId .
+	FILTER (?datanode2 != ?datanode1) 
+
+	# Some DataNodes don't contain an identifier
+	FILTER (!regex(str(?datanode2), "noIdentifier")) .  
+    FILTER (!regex(str(?datanode1), "noIdentifier")) .
+   	
+   	# The base of an interaction is the line of type gpml:Interaction
+   	?line rdf:type gpml:Interaction .
+   	?line dcterms:isPartOf ?pathway .
+   	?line gpml:graphid ?lineGraphId . 
+
+       
+        ?pointleft rdf:type gpml:Point .
+        ?pointleft dcterms:isPartOf ?line .
+        ?pointleft gpml:graphref ?dn1GraphId .
+        MINUS {?pointleft gpml:arrowHead ?arrowHeadleft .}
+
+        ?pointright rdf:type gpml:Point .
+        ?pointright dcterms:isPartOf ?line .
+        ?pointright gpml:graphref ?dn2GraphId .
+        MINUS {?pointright gpml:arrowHead ?arrowHeadright .}
+        	
+	}
+````
 ### The directed relation
 
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/Arrow.png)
