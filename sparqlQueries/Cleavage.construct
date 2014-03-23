@@ -1,4 +1,4 @@
-# This CONSTRUCT query annotates WikiPathways Directed Interactions. 
+# This CONSTRUCT query annotates WikiPathways Catalysis Interactions. 
 PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dc:      <http://purl.org/dc/elements/1.1/>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
@@ -7,24 +7,28 @@ PREFIX wp:      <http://vocabularies.wikipathways.org/wp#>
 PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
 
 CONSTRUCT {
-	?baseline rdf:type wp:AffectedInteraction .
 	?baseline wp:isCleavedBy ?datanode .
+	?baseline dcterms:isPartOf wp:Cleavage .
+	?baseline rdf:type wp:affectedRelation .
+	?baseline rdf:type wp:relation .
 }
 FROM <http://rdf.wikipathways.org/>
 WHERE {
-	?interactionline gpml:arrowHead "mim-cleavage"^^xsd:string .
- 	?interactionline dcterms:isPartOf ?pathway .
-        
-    # baseline affected
-    ?baseline gpml:graphid ?edgeGraphId .
-    ?baseline dcterms:isPartOf ?pathway .
+    	# target baseline 
+    	?baseline gpml:graphid ?edgeGraphId .
+    	?baseline rdf:type gpml:Interaction .
+	?baseline rdf:type wp:DirectedInteraction .
+    	?baseline dcterms:isPartOf ?pathway .
 
-	# DataNode 1   	
-   	?datanode gpml:graphid ?dn1GraphId .
-   	?datanode rdf:type gpml:DataNode .
-   	?datanode dcterms:isPartOf ?pathway .
-
-    ?interactionline gpml:graphref ?dn1GraphId .
-    ?interactionline gpml:graphref ?edgeGraphId .	
-    ?interactionline gpml:arrowTowards ?edgeGraphId .
+    	# source datanode    	
+    	?datanode gpml:graphid ?dnGraphId .
+    	?datanode rdf:type gpml:DataNode .
+    	?datanode dcterms:isPartOf ?pathway .
+    	
+    	# constructed interaction
+ 	?baseline dcterms:isPartOf ?pathway .
+    	?baseline gpml:graphref ?dnGraphId .
+    	?baseline gpml:graphref ?edgeGraphId .	
+    	?baseline gpml:arrowTowards ?edgeGraphId .
+	?baseline gpml:arrowHead "mim-cleavage"^^xsd:string .
 }
