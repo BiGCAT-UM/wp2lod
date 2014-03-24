@@ -502,13 +502,13 @@ The triple recognizing the necessary stimulation relation is:
 * wp:relation
  * wp:unDirectedInteration
  * wp:DirectedInteraction
-  * wp:Inhibition
-  * wp:TranscriptionTranslation
-  * wp:Modification
-  * wp:Conversion
+ 	* wp:Inhibition
+  	* wp:TranscriptionTranslation
+  	* wp:Modification
+  	* wp:Conversion
  - wp:AffectedInteraction
-  - wp:Stimulation
-  - wp:NecessaryStimulation
-  - wp:Cleavage
-  - wp:Catalysis
+  	- wp:Stimulation
+  	- wp:NecessaryStimulation
+  	- wp:Cleavage
+  	- wp:Catalysis
  
