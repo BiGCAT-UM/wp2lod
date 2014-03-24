@@ -179,7 +179,7 @@ In WikiPathways 13 different types of relations are recognised. All are of type 
 ### The undirected relation
 The undirected relation is a relation type which doesn't contain any directionality. A relationship is drawn as a line without specific attributes. The construct query to extract an undirected relation is:
 
-````
+```
 CONSTRUCT {
 	?line rdf:type wp:UnDirectedInteraction .
 	?line rdf:type wp:relation .
@@ -228,7 +228,8 @@ WHERE {
         MINUS {?pointright gpml:arrowHead ?arrowHeadright .}
         	
 	}
-````
+```
+---
 ### The directed relation
 
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/Arrow.png)
@@ -303,6 +304,7 @@ The triple recognizing the basic directed relation is:
 ```
 	?point gpml:arrowHead "Arrow"^^xsd:string .
 ```
+---
 
 #### The inhibition
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/TBar.png)
@@ -320,7 +322,7 @@ The triple recognizing the inhibition relation is:
 ```
 	?point gpml:arrowHead "TBar"^^xsd:string .
 ```
-
+---
 #### The Binding
 
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimBinding.png)
@@ -337,7 +339,7 @@ The triple recognizing the basic directed relation is:
 ```
 	?point gpml:arrowHead "mim-binding"^^xsd:string .
 ```
-
+---
 #### The Conversion
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimConversion.png)
 
@@ -353,7 +355,7 @@ The triple recognizing the conversion relation is:
 ```
 	?point gpml:arrowHead "mim-conversion"^^xsd:string .
 ```
-
+---
 #### The Modification
 
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimModification.png)
@@ -370,7 +372,7 @@ The triple recognizing the modification relation is:
 ```
 	?point gpml:arrowHead "mim-modification"^^xsd:string .
 ```
-
+---
 #### The TranscriptionTranslation
 
 ![Directed Interaction](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimTranscriptionTranslation.png)
@@ -388,6 +390,8 @@ The triple recognizing the transcription translation relation is:
 ```
 	?point gpml:arrowHead "mim-transcription-translation"^^xsd:string .
 ```
+
+---
 ### The affected interaction
 An affected interaction is one of the above-mentioned types being affected by another pathway element. An example of such an interaction is a catalysis where a specific directed relation is catalysed by a catalyst. 
 
@@ -424,7 +428,7 @@ WHERE {
 ```
 
 The following affected relation types are recognized:
-
+---
 #### A Catalysis
 ![Catalysis](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCatalysis.png)
 
@@ -442,7 +446,7 @@ The triple recognizing the catalysis relation is:
 ```
 	?point gpml:arrowHead "mim-catalysis"^^xsd:string .
 ```
-
+---
 #### A Cleavage
 ![Cleavage](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimCleavage.png)
 
@@ -460,7 +464,7 @@ The triple recognizing the transcription translation relation is:
 ```
 	?point gpml:arrowHead "mim-cleavage"^^xsd:string .
 ```
-
+---
 #### Stimulation
 ![Stimulation](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimStimulation.png)
 
@@ -478,7 +482,7 @@ The triple recognizing the stimulation relation is:
 ```
 	?point gpml:arrowHead "mim-stimulation"^^xsd:string .
 ```
-
+---
 #### Necessary Stimulation
 ![Necessary Stimulation](https://raw.githubusercontent.com/andrawaag/WPRDFDoc/master/interactionExamples/MimNecessaryStimulation.png)
 
@@ -497,7 +501,7 @@ The triple recognizing the necessary stimulation relation is:
 	?point gpml:arrowHead "mim-necessary-stimulation"^^xsd:string .
 ```
 
-
+---
 
 * wp:relation
  * wp:unDirectedInteration
