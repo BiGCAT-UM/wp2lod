@@ -77,10 +77,10 @@ public class WP2RDFConversion {
 		 * Prefixes are not perse necessary. They allow for more readable URI in the generated triples
 		 * New prefixes are to be set in WpRDFFunctionLibrary.setModelPrefix.
 		 */
-		Model model = ModelFactory.createDefaultModel();
+		// Model model = ModelFactory.createDefaultModel();
 		Model voidModel = ModelFactory.createDefaultModel();
-		Model openPhactsLinkSets = ModelFactory.createDefaultModel();
-		WpRDFFunctionLibrary.setModelPrefix(model);
+		// Model openPhactsLinkSets = ModelFactory.createDefaultModel();
+		// WpRDFFunctionLibrary.setModelPrefix(model);
 		WpRDFFunctionLibrary.setModelPrefix(voidModel);
 		WpRDFFunctionLibrary.populateVoid(voidModel, organismTaxonomy);
 		
@@ -100,6 +100,7 @@ public class WP2RDFConversion {
 		NodeList pathwayElements = wikiPathwaysDom.getElementsByTagName("Pathway");
 		for (int i=0; i<pathwayElements.getLength(); i++){
 			Model pathwayModel = WpRDFFunctionLibrary.createPathwayModel(); // create empty rdf model
+                        Model openPhactsLinkSets = ModelFactory.createDefaultModel();
 			String wpId = pathwayElements.item(i).getAttributes().getNamedItem("identifier").getTextContent();
 			String revision = pathwayElements.item(i).getAttributes().getNamedItem("revision").getTextContent();
 			String pathwayOrganism = "";
@@ -164,7 +165,7 @@ public class WP2RDFConversion {
 				basicCalls.saveRDF2File(pathwayModel, "/tmp/OPSWPRDF/"+wpId+"_r"+revision+".ttl", "TURTLE");
 				//TODO OPSWPRDF should be stored in a preference file.
 				
-				model.add(pathwayModel);
+				// model.add(pathwayModel);
 				pathwayModel.removeAll();
 			}
 		}
@@ -176,9 +177,9 @@ public class WP2RDFConversion {
 				
 		
 		FileUtils.writeStringToFile(new File("latestVersion.txt"), "v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString);
-		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+//		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
 		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
-		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+//		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
 		/*BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
 
         StringBuilder sb = new StringBuilder();
