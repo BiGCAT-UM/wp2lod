@@ -44,6 +44,7 @@
     <fileset dir="lib"/>
    </classpath>
    <exclude name="lib/**/*" />
+   <exclude name="inferDirectedInteractions.java" />
   </javac>
  </target>
 
