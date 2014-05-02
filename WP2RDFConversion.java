@@ -31,7 +31,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-
+import org.apache.commons.io.FilenameUtils;
 
 public class WP2RDFConversion {
 
@@ -62,15 +62,6 @@ public class WP2RDFConversion {
 		 * eutils. 
 		 */
 		HashMap<String, String> organismTaxonomy = WpRDFFunctionLibrary.getOrganismsTaxonomyMapping();
-			
-		/* This serializer requires a single XML file containing all pathways. 
-		 * When downloaded however each pathway is captured in invidual GPML files
-		 * mergeGpmltoSingleFile concatenates all files in a given directory into one file (i.e. /tmp/WpGPML.xml)
-		 */
-		// 
-		WpRDFFunctionLibrary.mergeGpmltoSingleFile(prop.getProperty("wikipathwaysDownloadDumps"));	
-		Document wikiPathwaysDom = basicCalls.openXmlFile("/tmp/WpGPML.xml");
-		//TODO These parameters should not be part of the code, but belong in preferences files yet to be implemented.
 
 		/* We use Jena (http://jena.apache.org/) as the API to generate RDF. 
 		 * Below both model and voidModel are initiated and the appropriate prefixes are set. 
@@ -92,7 +83,60 @@ public class WP2RDFConversion {
 		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper(prop);
 		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
         bridgeDbmodel.read(in, "", "TURTLE");
+
+        File dir = new File(prop.getProperty("wikipathwaysDownloadDumps"));
+        
+        File[] rootFiles = dir.listFiles();
+        //the section below is only in case of analysis sets
+        for (File rootFile : rootFiles) {
+        	String fileName = FilenameUtils.removeExtension(rootFile.getName());
+        	System.out.println(fileName);
+        	String[] identifiers = fileName.split("_");
+        	System.out.println(fileName);
+
+        	Document currentGPML = basicCalls.openXmlFile(rootFile.getPath());
+        	Element pathwayElement = (Element) currentGPML.getElementsByTagName("Pathway").item(0);
+        	String wpIdentifier = identifiers[identifiers.length-2];
+        	String wpRevision = identifiers[identifiers.length-1];
+        	pathwayElement.setAttribute("identifier", wpIdentifier);
+        	pathwayElement.setAttribute("revision", wpRevision);
+ 
+        	processGPMLFile(currentGPML, latestRevision, prop, bridgeDbmodel, mapper, organismTaxonomy);
+        }
+
+		Date myDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String myDateString = sdf.format(myDate);
 		
+		
+		FileUtils.writeStringToFile(new File("latestVersion.txt"), "v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString);
+//		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
+//		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+		/*BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
+
+        StringBuilder sb = new StringBuilder();
+        String line = constructQueryText.readLine();
+
+        while (line != null) {
+            sb.append(line);
+            sb.append('\n');
+            line = constructQueryText.readLine();
+        }
+        String queryText = sb.toString();
+        */
+	
+	/*Query query = QueryFactory.create(queryText);
+	QueryExecution queryExecution = QueryExecutionFactory.create(query, model);
+	Model results = queryExecution.execConstruct();
+	basicCalls.saveRDF2File(results, "/tmp/directedInteractions.ttl", "TURTLE");
+	*/
+	}
+
+	public static void processGPMLFile(
+		Document wikiPathwaysDom, int latestRevision, Properties prop,
+		Model bridgeDbmodel, IDMapperStack mapper, HashMap<String, String> organismTaxonomy
+	) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException, ConverterException {
 		/* From here on the actual RDF conversion starts. The concatenated pathways into a single file is loaded and now
 		 * being processed in a strait forward way. First the pathway information is converted into RDF and then each individual
 		 * pathway element. 
@@ -167,36 +211,6 @@ public class WP2RDFConversion {
 				// model.add(pathwayModel);
 				pathwayModel.removeAll();
 			}
-		}
-		Date myDate = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String myDateString = sdf.format(myDate);
-		
-		
-				
-		
-		FileUtils.writeStringToFile(new File("latestVersion.txt"), "v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString);
-//		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
-		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
-//		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
-		/*BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
-
-        StringBuilder sb = new StringBuilder();
-        String line = constructQueryText.readLine();
-
-        while (line != null) {
-            sb.append(line);
-            sb.append('\n');
-            line = constructQueryText.readLine();
-        }
-        String queryText = sb.toString();
-        */
-	
-	/*Query query = QueryFactory.create(queryText);
-	QueryExecution queryExecution = QueryExecutionFactory.create(query, model);
-	Model results = queryExecution.execConstruct();
-	basicCalls.saveRDF2File(results, "/tmp/directedInteractions.ttl", "TURTLE");
-	*/
+		}		
 	}
-
 }
