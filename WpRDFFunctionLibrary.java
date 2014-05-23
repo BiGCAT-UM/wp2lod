@@ -215,7 +215,7 @@ public class WpRDFFunctionLibrary {
 		while (iterEntrezGene.hasNext()){
 			Xref unifiedEntrezGeneId = (Xref) iterEntrezGene.next();
 			String unifiedEntrezGeneDataNodeIdentifier = URLEncoder.encode(unifiedEntrezGeneId.getId(), "UTF-8");
-			Resource unifiedEntrezGeneIdResource = model.createResource("http://identifiers.org/entrez.gene/"+unifiedEntrezGeneDataNodeIdentifier);
+			Resource unifiedEntrezGeneIdResource = model.createResource("http://identifiers.org/ncbigene/"+unifiedEntrezGeneDataNodeIdentifier);
 			internalWPDataNodeResource.addProperty(Wp.bdbEntrezGene, unifiedEntrezGeneIdResource);
 		}
 		
