@@ -269,8 +269,12 @@ public class WpRDFFunctionLibrary {
 		for (String organism : wpOrganisms){
 			System.out.println(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
 			Document taxonomy = basicCalls.openXmlURL(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
-			String ncbiTaxonomy = taxonomy.getElementsByTagName("Id").item(0).getTextContent().trim();
-			hm.put(organism, ncbiTaxonomy);
+			try {
+				String ncbiTaxonomy = taxonomy.getElementsByTagName("Id").item(0).getTextContent().trim();
+				hm.put(organism, ncbiTaxonomy);
+			} catch (Exception error) {
+				System.out.println("ERROR: while getting taxonomy ID for organism: " + organism);
+			}
 		}
 		return hm;
 	}
