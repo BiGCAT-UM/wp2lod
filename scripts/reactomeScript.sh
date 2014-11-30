@@ -12,10 +12,11 @@ for file in $(ls); do unzip $file; done
 rm *.zip
 cd /tmp
 
+cd "${WORKSPACE}"
+cd ..
+ant run
+
 # Generate the triples
 rm /tmp/wpContent*
 java -Xmx4G -jar WP2Rdf.jar
 
-cd "${WORKSPACE}"
-cd ..
-ant run
