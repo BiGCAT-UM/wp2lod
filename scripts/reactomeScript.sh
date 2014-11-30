@@ -1,3 +1,4 @@
+export WORKSPACE=`pwd`
 rm -rf /tmp/GPML
 mkdir /tmp/GPML
 rm -rf /tmp/WPREACTRDF
