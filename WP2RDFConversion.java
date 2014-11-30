@@ -109,7 +109,7 @@ public class WP2RDFConversion {
             if (Integer.valueOf(revision) > latestRevision){
             	latestRevision = Integer.valueOf(revision);
             }
-			File f = new File(prop.getProperty("rdfRepository")+wpId+"_r"+revision+".ttl");
+			File f = new File(prop.getProperty("rdfRepository") + "/" +wpId+"_r"+revision+".ttl");
 			System.out.println(f.getName());
 			if(!f.exists()) {
 				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, pathwayElements.item(i), organismTaxonomy);				
@@ -162,9 +162,8 @@ public class WP2RDFConversion {
 					WpRDFFunctionLibrary.addPathwayOntologyTriples(pathwayModel, pwResource, ontologyElements.item(n));
 				}
 				System.out.println(wpId);
-				basicCalls.saveRDF2File(pathwayModel, "/tmp/OPSWPRDF/"+wpId+"_r"+revision+".ttl", "TURTLE");
-				//TODO OPSWPRDF should be stored in a preference file.
-				
+				basicCalls.saveRDF2File(pathwayModel, f.getAbsolutePath(), "TURTLE");
+
 				// model.add(pathwayModel);
 				pathwayModel.removeAll();
 			}
