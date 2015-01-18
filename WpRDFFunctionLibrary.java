@@ -150,7 +150,7 @@ public class WpRDFFunctionLibrary {
 		distribution.addProperty(RDF.type, voidModel.createResource("http://www.w3.org/ns/dcat#Distribution"));
 		distribution.addLiteral(
 			voidModel.createProperty("http://www.w3.org/ns/dcat#mediaType"), "application/zip"
-		)
+		);
 		voidBase.addProperty(
 			voidModel.createProperty("http://www.w3.org/ns/dcat#downloadURL"), mainDatadump
 		);
