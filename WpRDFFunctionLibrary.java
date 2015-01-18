@@ -133,6 +133,10 @@ public class WpRDFFunctionLibrary {
 			"This is the VoID description for a " + datasetTitle + " dataset.", "en"
 		);
 		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/" + voidShortCode + "/");
+		voidBase.addProperty(
+			voidModel.createProperty("http://www.w3.org/ns/dcat#landingPage"),
+			voidModel.createResource("http://www.wikipathways.org/")
+		);
 		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
 		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
 		Resource authorResource = voidModel.createResource(voidInfo.get("voidAuthor"));
