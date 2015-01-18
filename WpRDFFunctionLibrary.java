@@ -127,11 +127,12 @@ public class WpRDFFunctionLibrary {
 		Calendar now = Calendar.getInstance();
 		Literal nowLiteral = voidModel.createTypedLiteral(now);
 		String datasetTitle = voidInfo.get("voidDatasetTitle");
+		String voidShortCode = voidInfo.get("voidShortCode");
 		Literal titleLiteral = voidModel.createLiteral(datasetTitle + " VoID Description", "en");
 		Literal descriptionLiteral = voidModel.createLiteral(
 			"This is the VoID description for a " + datasetTitle + " dataset.", "en"
 		);
-		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/");
+		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/" + voidShortCode + "/");
 		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
 		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
 		Resource authorResource = voidModel.createResource(voidInfo.get("voidAuthor"));
@@ -149,7 +150,7 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(Pav.importedBy, authorResource);
 		voidBase.addProperty(Pav.importedFrom, apiResource);
 		voidBase.addProperty(Pav.importedOn, nowLiteral);
-		Resource distribution = voidModel.createResource("http://rdf.wikipathways.org/distribution");
+		Resource distribution = voidModel.createResource("http://rdf.wikipathways.org/" + voidShortCode + "/distribution");
 		distribution.addProperty(RDF.type, voidModel.createResource("http://www.w3.org/ns/dcat#Distribution"));
 		distribution.addLiteral(
 			voidModel.createProperty("http://www.w3.org/ns/dcat#mediaType"), "application/zip"
