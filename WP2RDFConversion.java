@@ -113,7 +113,7 @@ public class WP2RDFConversion {
 
 		WpRDFFunctionLibrary.populateVoid(voidModel, organismTaxonomy, new HashMap<String,String>() {{
 			String[] voidProps = {
-				"voidAuthor", "voidInstitute", "voidDownload"
+				"voidAuthor", "voidInstitute", "voidDownload", "voidDatasetTitle"
 			};
 			for (String voidProp : voidProps) put(voidProp, prop.getProperty(voidProp));
 		}});

@@ -126,8 +126,11 @@ public class WpRDFFunctionLibrary {
 		//Populate void.ttl
 		Calendar now = Calendar.getInstance();
 		Literal nowLiteral = voidModel.createTypedLiteral(now);
-		Literal titleLiteral = voidModel.createLiteral("WikiPathways-RDF VoID Description", "en");
-		Literal descriptionLiteral = voidModel.createLiteral("This is the VoID description for a WikiPathwyas-RDF dataset.", "en");
+		String datasetTitle = voidInfo.get("voidDatasetTitle");
+		Literal titleLiteral = voidModel.createLiteral(datasetTitle + " VoID Description", "en");
+		Literal descriptionLiteral = voidModel.createLiteral(
+			"This is the VoID description for a " + datasetTitle + " dataset.", "en"
+		);
 		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/");
 		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
 		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
