@@ -164,7 +164,11 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(Pav.createdBy, authorResource);
 		voidBase.addProperty(Pav.createdAt, instituteResource);		 
 		voidBase.addLiteral(Pav.createdOn, nowLiteral);
-		voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://semanticscience.org/resource/SIO_001107"));
+		voidBase.addProperty(DCTerms.subject, Biopax_level3.Pathway);
+		voidBase.addProperty(
+			voidModel.createProperty("http://www.w3.org/ns/dcat#theme"),
+			voidModel.createResource("http://semanticscience.org/resource/SIO_001107")
+		);
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/ncbigene/2678"));
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/pubmed/15215856"));
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/hmdb/HMDB02005"));
