@@ -851,13 +851,17 @@ public class WpRDFFunctionLibrary {
 		if (((Element) groupNode).getAttributes().getNamedItem("GraphId") != null){
 			graphId = ((Element) groupNode).getAttributes().getNamedItem("GraphId").getTextContent().trim();
 		}
-		String groupId = ((Element) groupNode).getAttributes().getNamedItem("GroupId").getTextContent().trim();
+		String groupId = "";
+		if (((Element) groupNode).getAttributes().getNamedItem("GraphId") != null){
+			groupId = ((Element) groupNode).getAttributes().getNamedItem("GroupId").getTextContent().trim();
+		}
 
-		Resource groupResource = model.createResource("http://rdf.wikipathways.org/Pathway/"+wpId+"_r"+revId+"/group/"+graphId);
+		Resource groupResource = model.createResource("http://rdf.wikipathways.org/Pathway/"+wpId+"_r"+revId+"/group/"+groupId);
 		groupResource.addProperty(RDF.type, Gpml.Group);
 		groupResource.addLiteral(Gpml.graphid, graphId);
+		if (groupId != null && groupId.length() > 0)
+			groupResource.addLiteral(Gpml.groupid, groupId);
 		groupResource.addProperty(DCTerms.isPartOf, pwResource);
-		//TODO understand what groupRef means
 	}
 
 	public static void addCommentTriples(Model model, Resource pwResource, NodeList commentNodeList, String wpId, String revId){
