@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -121,7 +122,7 @@ public class WpRDFFunctionLibrary {
 		model.setNsPrefix("freq", Freq.getURI());
 	}
 	
-	public static void populateVoid(Model voidModel,HashMap<String, String> organismTaxonomy){
+	public static void populateVoid(Model voidModel, Map<String, String> organismTaxonomy, Map<String, String> voidInfo){
 		//Populate void.ttl
 		Calendar now = Calendar.getInstance();
 		Literal nowLiteral = voidModel.createTypedLiteral(now);
@@ -130,11 +131,11 @@ public class WpRDFFunctionLibrary {
 		Resource voidBase = voidModel.createResource("http://rdf.wikipathways.org/");
 		Resource identifiersOrg = voidModel.createResource("http://identifiers.org");
 		Resource wpHomeBase = voidModel.createResource("http://www.wikipathways.org/");
-		Resource authorResource = voidModel.createResource("http://orcid.org/0000-0001-9773-4008");
+		Resource authorResource = voidModel.createResource(voidInfo.get("voidAuthor"));
 		Resource apiResource = voidModel.createResource("http://www.wikipathways.org/wpi/webservice/webservice.php");
-		Resource mainDatadump = voidModel.createResource("http://rdf.wikipathways.org/wpContent.ttl.gz");
+		Resource mainDatadump = voidModel.createResource(voidInfo.get("voidDownload"));
 		Resource license = voidModel.createResource("http://creativecommons.org/licenses/by/3.0/");
-		Resource instituteResource = voidModel.createResource("http://dbpedia.org/page/Maastricht_University");
+		Resource instituteResource = voidModel.createResource(voidInfo.get("voidInstitute"));
 		voidBase.addProperty(RDF.type, Void.Dataset);
 		voidBase.addProperty(DCTerms.title, titleLiteral);
 		voidBase.addProperty(DCTerms.description, descriptionLiteral);
@@ -146,11 +147,14 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(Pav.importedFrom, apiResource);
 		voidBase.addProperty(Pav.importedOn, nowLiteral);
 		voidBase.addProperty(Void.dataDump, mainDatadump);
-		voidBase.addProperty(Voag.frequencyOfChange, Freq.Irregular);
+		voidBase.addProperty(
+			voidModel.createProperty("http://purl.org/dc/terms/accuralPeriodicity"),
+			voidModel.createResource("http://purl.org/cld/freq/irregular")
+		);
 		voidBase.addProperty(Pav.createdBy, authorResource);
 		voidBase.addProperty(Pav.createdAt, instituteResource);		 
 		voidBase.addLiteral(Pav.createdOn, nowLiteral);
-		voidBase.addProperty(DCTerms.subject, Biopax_level3.Pathway);
+		voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://semanticscience.org/resource/SIO_001107"));
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/ncbigene/2678"));
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/pubmed/15215856"));
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/hmdb/HMDB02005"));
@@ -158,7 +162,7 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(Void.exampleResource, voidModel.createResource("http://identifiers.org/obo.chebi/17242"));
 
 		for (String organism : organismTaxonomy.values()) {
-			voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://dbpedia.org/page/"+organism.replace(" ", "_")));
+			voidBase.addProperty(DCTerms.subject, voidModel.createResource("http://identifiers.org/taxonomy/"+organism));
 		}
 		voidBase.addProperty(Void.vocabulary, Biopax_level3.NAMESPACE);
 		voidBase.addProperty(Void.vocabulary, voidModel.createResource(Wp.getURI()));

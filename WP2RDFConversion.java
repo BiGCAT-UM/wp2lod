@@ -40,7 +40,7 @@ public class WP2RDFConversion {
 		/* 
 		 * Set the preference for this to work on your local machine
 		 */
-		Properties prop = new Properties();
+		final Properties prop = new Properties();
 		prop.load(new FileInputStream("config.properties"));
 	    
 		/* We keep a three dimensional type of versioning for the RDF dumps of WikiPathways.
@@ -73,7 +73,6 @@ public class WP2RDFConversion {
 		// Model openPhactsLinkSets = ModelFactory.createDefaultModel();
 		// WpRDFFunctionLibrary.setModelPrefix(model);
 		WpRDFFunctionLibrary.setModelPrefix(voidModel);
-		WpRDFFunctionLibrary.populateVoid(voidModel, organismTaxonomy);
 		
 		/* Similar pathways entities can have different identifiers. To allow being able to 
 		 * recognize similarity we use bridgeDb (http://www.bridgedb.org). For each pathway element
@@ -111,6 +110,13 @@ public class WP2RDFConversion {
 		
 		FileUtils.writeStringToFile(new File("latestVersion.txt"), "v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString);
 //		basicCalls.saveRDF2File(model, "/tmp/wpContent_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
+
+		WpRDFFunctionLibrary.populateVoid(voidModel, organismTaxonomy, new HashMap<String,String>() {{
+			String[] voidProps = {
+				"voidAuthor", "voidInstitute", "voidDownload"
+			};
+			for (String voidProp : voidProps) put(voidProp, prop.getProperty(voidProp));
+		}});
 		basicCalls.saveRDF2File(voidModel, "/tmp/void.ttl", "TURTLE");
 //		basicCalls.saveRDF2File(openPhactsLinkSets, "/tmp/opsLinkSets_v"+schemaVersion+"."+softwareVersion+"."+latestRevision+"_"+myDateString+".ttl", "TURTLE");
 		/*BufferedReader constructQueryText = new BufferedReader(new FileReader("sparqlQueries/DirectedInteraction.construct"));
