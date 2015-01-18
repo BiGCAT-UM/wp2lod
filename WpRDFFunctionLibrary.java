@@ -146,7 +146,17 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(Pav.importedBy, authorResource);
 		voidBase.addProperty(Pav.importedFrom, apiResource);
 		voidBase.addProperty(Pav.importedOn, nowLiteral);
-		voidBase.addProperty(Void.dataDump, mainDatadump);
+		Resource distribution = voidModel.createResource("http://rdf.wikipathways.org/distribution");
+		distribution.addProperty(RDF.type, voidModel.createResource("http://www.w3.org/ns/dcat#Distribution"));
+		distribution.addLiteral(
+			voidModel.createProperty("http://www.w3.org/ns/dcat#mediaType"), "application/zip"
+		)
+		voidBase.addProperty(
+			voidModel.createProperty("http://www.w3.org/ns/dcat#downloadURL"), mainDatadump
+		);
+		voidBase.addProperty(
+			voidModel.createProperty("http://www.w3.org/ns/dcat#distribution"), distribution
+		);
 		voidBase.addProperty(
 			voidModel.createProperty("http://purl.org/dc/terms/accuralPeriodicity"),
 			voidModel.createResource("http://purl.org/cld/freq/irregular")
