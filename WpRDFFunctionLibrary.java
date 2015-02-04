@@ -68,7 +68,7 @@ import de.fuberlin.wiwiss.ng4j.swp.vocabulary.FOAF;
 
 public class WpRDFFunctionLibrary {
 	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException {
-		return new WikiPathwaysClient(new URL("http://www.wikipathways.org/wpi/webservice/webservice.php"));
+		return new WikiPathwaysClient(new URL("http://webservice.wikipathways.org"));
 	}
 	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
