@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.rpc.ServiceException;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -42,8 +41,7 @@ import org.bridgedb.IDMapperException;
 import org.bridgedb.IDMapperStack;
 import org.bridgedb.Xref;
 import org.bridgedb.bio.BioDataSource;
-import org.pathvisio.model.ConverterException;
-import org.pathvisio.wikipathways.WikiPathwaysClient;
+import org.wikipathways.client.WikiPathwaysClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,8 +67,8 @@ import de.fuberlin.wiwiss.ng4j.swp.vocabulary.FOAF;
 
 
 public class WpRDFFunctionLibrary {
-	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException, ServiceException {
-		return new WikiPathwaysClient(new URL("http://www.wikipathways.org/wpi/webservice/webservice.php"));
+	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException {
+		return new WikiPathwaysClient(new URL("http://webservice.wikipathways.org"));
 	}
 	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
@@ -281,14 +279,14 @@ public class WpRDFFunctionLibrary {
 
 	}
 
-	public static Document addWpProvenance(Document currentGPML, String wpIdentifier, String wpRevision) throws ConverterException, ParserConfigurationException, SAXException, IOException{	
+	public static Document addWpProvenance(Document currentGPML, String wpIdentifier, String wpRevision) throws ParserConfigurationException, SAXException, IOException{	
 		Element pathwayElement = (Element) currentGPML.getElementsByTagName("Pathway").item(0);
 		pathwayElement.setAttribute("identifier", wpIdentifier);
 		pathwayElement.setAttribute("revision", wpRevision);
 		return currentGPML;
 	}
 
-	public static HashMap<String, String> getOrganismsTaxonomyMapping() throws ServiceException, ParserConfigurationException, SAXException, IOException{
+	public static HashMap<String, String> getOrganismsTaxonomyMapping() throws ParserConfigurationException, SAXException, IOException{
 		HashMap<String, String> hm = new HashMap<String, String>();
 		WikiPathwaysClient wpClient = startWpApiClient();
 		String[] wpOrganisms = wpClient.listOrganisms();
@@ -923,7 +921,7 @@ public class WpRDFFunctionLibrary {
 		}
 	}
 
-	public static void mergeGpmltoSingleFile (String gpmlLocation) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException, ConverterException{
+	public static void mergeGpmltoSingleFile (String gpmlLocation) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, TransformerException {
 		// Based on: http://stackoverflow.com/questions/10759775/how-to-merge-1000-xml-files-into-one-in-java
 		//for (int i = 1; i < 8 ; i++) {		
 		Writer outputWriter = new FileWriter("/tmp/WpGPML.xml");

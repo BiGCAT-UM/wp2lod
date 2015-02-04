@@ -11,13 +11,11 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.rpc.ServiceException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
 import org.apache.commons.io.FileUtils;
 import org.bridgedb.IDMapperException;
 import org.bridgedb.IDMapperStack;
-import org.pathvisio.model.ConverterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
@@ -35,7 +33,7 @@ import org.apache.commons.io.FilenameUtils;
 
 public class WP2RDFConversion {
 
-	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException, ConverterException {	
+	public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException {	
 		
 		/* 
 		 * Set the preference for this to work on your local machine
@@ -143,7 +141,7 @@ public class WP2RDFConversion {
 	public static void processGPMLFile(
 		Document wikiPathwaysDom, int latestRevision, Properties prop,
 		Model bridgeDbmodel, IDMapperStack mapper, HashMap<String, String> organismTaxonomy
-	) throws ParserConfigurationException, SAXException, IOException, ServiceException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException, ConverterException {
+	) throws ParserConfigurationException, SAXException, IOException, ClassNotFoundException, IDMapperException, ParseException, XMLStreamException, TransformerException {
 		/* From here on the actual RDF conversion starts. The concatenated pathways into a single file is loaded and now
 		 * being processed in a strait forward way. First the pathway information is converted into RDF and then each individual
 		 * pathway element. 
