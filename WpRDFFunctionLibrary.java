@@ -147,8 +147,8 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(DCTerms.description, descriptionLiteral);
 		voidBase.addProperty(FOAF.homepage, wpHomeBase);
 		voidBase.addProperty(DCTerms.license, license);
-		voidBase.addLiteral(Void.uriSpace, voidBase);
-		voidBase.addLiteral(Void.uriSpace, identifiersOrg);
+		voidBase.addLiteral(Void.uriSpace, "http://rdf.wikipathways.org/" + voidShortCode + "/");
+		voidBase.addLiteral(Void.uriSpace, "http://identifiers.org");
 		voidBase.addProperty(Pav.importedBy, authorResource);
 		voidBase.addProperty(Pav.importedFrom, apiResource);
 		voidBase.addProperty(Pav.importedOn, nowLiteral);
