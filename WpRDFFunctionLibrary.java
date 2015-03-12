@@ -147,8 +147,8 @@ public class WpRDFFunctionLibrary {
 		voidBase.addProperty(DCTerms.description, descriptionLiteral);
 		voidBase.addProperty(FOAF.homepage, wpHomeBase);
 		voidBase.addProperty(DCTerms.license, license);
-		voidBase.addProperty(Void.uriSpace, voidBase);
-		voidBase.addProperty(Void.uriSpace, identifiersOrg);
+		voidBase.addLiteral(Void.uriSpace, voidBase);
+		voidBase.addLiteral(Void.uriSpace, identifiersOrg);
 		voidBase.addProperty(Pav.importedBy, authorResource);
 		voidBase.addProperty(Pav.importedFrom, apiResource);
 		voidBase.addProperty(Pav.importedOn, nowLiteral);
