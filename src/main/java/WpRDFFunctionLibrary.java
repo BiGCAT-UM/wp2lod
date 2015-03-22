@@ -47,6 +47,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -64,7 +65,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 import de.fuberlin.wiwiss.ng4j.swp.vocabulary.FOAF;
-
+import ontologies.*;
+import ontologies.Void;
 
 public class WpRDFFunctionLibrary {
 	public static WikiPathwaysClient startWpApiClient() throws MalformedURLException {

@@ -2,6 +2,7 @@
  *
  * License: new BSD.
  */
+package ontologies;
 
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;

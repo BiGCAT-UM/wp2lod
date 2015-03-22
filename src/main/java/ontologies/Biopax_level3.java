@@ -1,4 +1,4 @@
-/* CVS $Id: $ */
+package ontologies;
 
 import com.hp.hpl.jena.rdf.model.*;
 
