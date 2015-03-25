@@ -513,29 +513,28 @@ public class WpRDFFunctionLibrary {
 				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
 				Resource sourceURI = openPhactsLinkSets.createResource(identifiersOrgResource.getURI());
 				addBdbLinkSets(openPhactsLinkSets, mapper, idXref, sourceURI);
-
-
-			}
-			if (dataNodeType.equals("Metabolite")){
+			} else if (dataNodeType.equals("Metabolite")){
 				internalWPDataNodeResource.addProperty(RDF.type, Wp.Metabolite);
 				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
 				Resource sourceURI = openPhactsLinkSets.createResource(identifiersOrgResource.getURI());
 				addBdbLinkSets(openPhactsLinkSets, mapper, idXref, sourceURI);
-			}
-			if (dataNodeType.equals("Pathway")){
+			} else if (dataNodeType.equals("Pathway")){
 				internalWPDataNodeResource.addProperty(RDF.type, Wp.Pathway);
 				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
-			}
-			if (dataNodeType.equals("Protein")){
+			} else if (dataNodeType.equals("Protein")){
 				internalWPDataNodeResource.addProperty(RDF.type, Wp.Protein);
 				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
 				Resource sourceURI = openPhactsLinkSets.createResource(identifiersOrgResource.getURI());
 				addBdbLinkSets(openPhactsLinkSets, mapper, idXref, sourceURI);
-			}
-			if (dataNodeType.equals("Complex")){
+			} else if (dataNodeType.equals("Complex")){
 				internalWPDataNodeResource.addProperty(RDF.type, Wp.Complex);
 				openPhactsLinkSets.createResource(identifiersOrgResource);
 				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
+			} else if (dataNodeType.equals("Rna")){
+				internalWPDataNodeResource.addProperty(RDF.type, Wp.RNA);
+				getUnifiedIdentifiers(model, mapper, idXref, internalWPDataNodeResource);
+				Resource sourceURI = openPhactsLinkSets.createResource(identifiersOrgResource.getURI());
+				addBdbLinkSets(openPhactsLinkSets, mapper, idXref, sourceURI);
 			}
 		}
 
