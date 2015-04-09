@@ -1770,7 +1770,7 @@
          bridgeDB:identifiers_org_base "http://identifiers.org/kegg.compound/";
          bridgeDB:wikipathways_id_base "http://identifiers.org/kegg.compound/";
          bridgeDB:bio2RDF "http://bio2rdf.org/ec:$id";
-         bridgeDB:fullName "Kegg Compound".
+         bridgeDB:fullName "KEGG Compound".
 :DataSource_KEGG_Drug a bridgeDB:DataSource; 
          bridgeDB:mainUrl "http://www.genome.jp/kegg/drug/";
          bridgeDB:idExample "D00123";
@@ -3551,7 +3551,7 @@
          bridgeDB:identifiers_org_base "http://identifiers.org/uniprot/";
          bridgeDB:wikipathways_id_base "http://identifiers.org/uniprot/";
          bridgeDB:sourceRDFURI "http://purl.uniprot.org/uniprot/$id";
-         bridgeDB:fullName "Uniprot/TrEMBL".
+         bridgeDB:fullName "Uniprot-TrEMBL".
 :DataSource_UniSTS a bridgeDB:DataSource; 
          bridgeDB:mainUrl "http://www.ncbi.nlm.nih.gov/sites/entrez?db=unists";
          bridgeDB:idExample "456789";
@@ -3703,7 +3703,7 @@
          bridgeDB:type "unknown";
          bridgeDB:wikipathways_id_base "http://bio2rdf.org/kegg:";
 	 bridgeDB:bio2RDF "http://bio2rdf.org/kegg:$id";
-         bridgeDB:fullName "Kegg ortholog".
+         bridgeDB:fullName "KEGG ortholog".
 :DataSource_miRBase a bridgeDB:DataSource; 
          bridgeDB:primary "true"^^xsd:boolean;
          bridgeDB:type "unknown";
