@@ -44,6 +44,7 @@ import org.bridgedb.bio.BioDataSource;
 import org.wikipathways.client.WikiPathwaysClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -465,19 +466,21 @@ public class WpRDFFunctionLibrary {
 		if (dataNode.getAttributes().getNamedItem("GroupRef") != null) {
 			dataNodeGroupRef = dataNode.getAttributes().getNamedItem("GroupRef").getTextContent().trim();
 		}
-		String dataNodeDataSource = ((Element) dataNode).getElementsByTagName("Xref").item(0).getAttributes().getNamedItem("Database").getTextContent().trim();
-		String dataNodeIdentifier = ((Element) dataNode).getElementsByTagName("Xref").item(0).getAttributes().getNamedItem("ID").getTextContent().trim().replace(" ", "_");
-		Float dataNodeGraphicsCenterX = Float.valueOf(((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("CenterX").getTextContent().trim());
-		Float dataNodeGraphicsCenterY = Float.valueOf(((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("CenterY").getTextContent().trim());
-		Float dataNodeGraphicsHeight = Float.valueOf(((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("Height").getTextContent().trim());
-		Float dataNodeGraphicsWidth = Float.valueOf(((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("Width").getTextContent().trim());
+		NamedNodeMap xrefAttribs = ((Element) dataNode).getElementsByTagName("Xref").item(0).getAttributes();
+		String dataNodeDataSource = xrefAttribs.getNamedItem("Database").getTextContent().trim();
+		String dataNodeIdentifier = xrefAttribs.getNamedItem("ID").getTextContent().trim().replace(" ", "_");
+		NamedNodeMap graphicsAttribs = ((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes();
+		Float dataNodeGraphicsCenterX = Float.valueOf(graphicsAttribs.getNamedItem("CenterX").getTextContent().trim());
+		Float dataNodeGraphicsCenterY = Float.valueOf(graphicsAttribs.getNamedItem("CenterY").getTextContent().trim());
+		Float dataNodeGraphicsHeight = Float.valueOf(graphicsAttribs.getNamedItem("Height").getTextContent().trim());
+		Float dataNodeGraphicsWidth = Float.valueOf(graphicsAttribs.getNamedItem("Width").getTextContent().trim());
 		String dataNodeDataColor = null;
-		if (((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("Color")!=null)
-			dataNodeDataColor = ((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("Color").getTextContent().trim();
+		if (graphicsAttribs.getNamedItem("Color")!=null)
+			dataNodeDataColor = graphicsAttribs.getNamedItem("Color").getTextContent().trim();
 
 		String dataNodeZorder=null;
-		if (((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("ZOrder")!=null)
-			dataNodeZorder = ((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("ZOrder").getTextContent().trim();
+		if (graphicsAttribs.getNamedItem("ZOrder")!=null)
+			dataNodeZorder = graphicsAttribs.getNamedItem("ZOrder").getTextContent().trim();
 
 		if (!sources.containsKey(dataNodeDataSource)) {
 			System.out.println("No info for data source: " + dataNodeDataSource);
