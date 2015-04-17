@@ -318,6 +318,7 @@ public class WpRDFFunctionLibrary {
 		String[] wpOrganisms = wpClient.listOrganisms();
 		for (String organism : wpOrganisms){
 			if (!hm.containsKey(organism)) {
+				System.out.println("No NCBI taxonomy ID yet for '" + organism + "'");
 				String eUtilsURL = constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_"));
 				System.out.println(eUtilsURL);
 				Document taxonomy = basicCalls.openXmlURL(eUtilsURL);
