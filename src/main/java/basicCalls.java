@@ -72,10 +72,11 @@ public class basicCalls {
 
 	}
 
-	public static void saveRDF2File(Model model, String filename, String format) throws FileNotFoundException{
+	public static void saveRDF2File(Model model, String filename, String format) throws IOException{
 		FileOutputStream fout;
 		fout = new FileOutputStream(filename);
 		model.write(fout, format);
+		fout.close();
 	}
 	
 	public static void readRDFFromFile(Model model, String filename) throws FileNotFoundException{
