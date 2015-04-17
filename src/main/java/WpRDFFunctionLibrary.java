@@ -93,7 +93,7 @@ public class WpRDFFunctionLibrary {
 	
 	public static Model createBridgeDbModel() throws IOException {
 		Model bridgeDbmodel = ModelFactory.createDefaultModel();
-		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
+		InputStream in = WpRDFFunctionLibrary.class.getResourceAsStream("/BioDataSource.ttl");
 		bridgeDbmodel.read(in, "", "TURTLE");
 		in.close();
 		return bridgeDbmodel;

@@ -28,6 +28,9 @@
    <fileset dir="build">
     <include name="**/*" unless="module.buildfiles.present"/>
    </fileset>
+   <fileset dir="src/main/resources">
+    <include name="**/*" unless="module.buildfiles.present"/>
+   </fileset>
    <manifest>
     <attribute name="Main-Class" value="WP2RDFConversion"/>
    </manifest>
