@@ -102,6 +102,7 @@
 
  <target name="clean">
   <delete dir="build"/>
+  <delete file="WP2836_r79835.ttl"/>
   <delete file="WP2Rdf.jar"/>
  </target>
 
