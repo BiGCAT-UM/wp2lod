@@ -91,10 +91,11 @@ public class WpRDFFunctionLibrary {
 		return mapper;
 	}
 	
-	public static Model createBridgeDbModel() throws ClassNotFoundException, IDMapperException, FileNotFoundException{
+	public static Model createBridgeDbModel() throws IOException {
 		Model bridgeDbmodel = ModelFactory.createDefaultModel();
 		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
 		bridgeDbmodel.read(in, "", "TURTLE");
+		in.close();
 		return bridgeDbmodel;
 	}
 	

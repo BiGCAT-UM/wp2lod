@@ -78,8 +78,6 @@ public class WP2RDFConversion {
 		 */
 		Model bridgeDbmodel = WpRDFFunctionLibrary.createBridgeDbModel();
 		IDMapperStack mapper = WpRDFFunctionLibrary.createBridgeDbMapper(prop);
-		InputStream in = new FileInputStream("/tmp/BioDataSource.ttl");
-        bridgeDbmodel.read(in, "", "TURTLE");
 
         File dir = new File(prop.getProperty("wikipathwaysDownloadDumps"));
         
