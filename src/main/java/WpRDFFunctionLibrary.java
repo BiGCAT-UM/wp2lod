@@ -308,10 +308,19 @@ public class WpRDFFunctionLibrary {
 		hm.put("Glycine max", "3847");
 		hm.put("Gibberella zeae", "5518");
 		hm.put("Homo sapiens", "9606");
+		hm.put("Hordeum vulgare", "4513");
 		hm.put("Mus musculus", "10090");
 		hm.put("Mycobacterium tuberculosis", "1773");
 		hm.put("Oryza sativa", "4530");
 		hm.put("Pan troglodytes", "9598");
+		hm.put("Populus trichocarpa", "3694");
+		hm.put("Rattus norvegicus", "10116");
+		hm.put("Saccharomyces cerevisiae", "4932");
+		hm.put("Solanum lycopersicum", "4081");
+		hm.put("Sus scrofa", "9823");
+		hm.put("Vitis vinifera", "29760");
+		hm.put("Xenopus tropicalis", "8364");
+		hm.put("Zea mays", "4577");
 	}}
 
 	public static HashMap<String, String> getOrganismsTaxonomyMapping() throws ParserConfigurationException, SAXException, IOException{
