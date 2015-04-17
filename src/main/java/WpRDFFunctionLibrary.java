@@ -1,7 +1,5 @@
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -14,6 +12,7 @@ import java.net.URLEncoder;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,17 +74,32 @@ public class WpRDFFunctionLibrary {
 	public static IDMapperStack createBridgeDbMapper(Properties prop) throws ClassNotFoundException, IDMapperException{
 		BioDataSource.init();
 		Class.forName("org.bridgedb.rdb.IDMapperRdb");
+		String speciesString = prop.getProperty("species", "");
+		final List<String> species = new ArrayList<String>();
+		if (speciesString.length() > 0) {
+			if (speciesString.contains(",")) {
+				species.addAll(Arrays.asList(speciesString.split(",")));
+			} else {
+				species.add(speciesString);
+			}
+		}
 		File dir = new File(prop.getProperty("bridgefiles")); //TODO Get Refector to get them directly form bridgedb.org
 		FilenameFilter filter = new FilenameFilter() {
 		    public boolean accept(File dir, String name) {
-		        return name.toLowerCase().endsWith(".bridge");
+                String speciesCode = name.substring(0, 2);
+                name = name.toLowerCase();
+                if (!name.endsWith(".bridge")) return false;
+                if (name.contains("metabolite")) return true;
+                System.out.println("species code: " + speciesCode);
+                if (species.size() == 0 || species.contains(speciesCode)) return true;
+                return false;
 		    }
 		};
 	
 		File[] bridgeDbFiles = dir.listFiles(filter);
 		IDMapperStack mapper = new IDMapperStack();
 		for (File bridgeDbFile : bridgeDbFiles) {
-			System.out.println(bridgeDbFile.getAbsolutePath());
+			System.out.println("Reading BridgeDb file: " + bridgeDbFile.getAbsolutePath());
 			mapper.addIDMapper("idmapper-pgdb:" + bridgeDbFile.getAbsolutePath());
 		}
 		return mapper;
