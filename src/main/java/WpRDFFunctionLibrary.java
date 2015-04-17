@@ -288,18 +288,45 @@ public class WpRDFFunctionLibrary {
 		return currentGPML;
 	}
 
+	// prepopulate the map to reduce the call to the NCBI database
+	final static HashMap<String, String> hm = new HashMap<String, String>();
+	{{
+		hm.put("Anopheles gambiae", "7165");
+		hm.put("Arabidopsis thaliana", "3702");
+		hm.put("Bacillus subtilis", "1423");
+		hm.put("Beta vulgaris", "161934");
+		hm.put("Bos taurus", "9913");
+		hm.put("Caenorhabditis elegans", "6239");
+		hm.put("Canis familiaris", "9615");
+		hm.put("Clostridium thermocellum", "1515");
+		hm.put("Danio rerio", "7955");
+		hm.put("Drosophila melanogaster", "7227");
+		hm.put("Escherichia coli", "562");
+		hm.put("Equus caballus", "9796");
+		hm.put("Gallus gallus", "9031");
+		hm.put("Glycine max", "3847");
+		hm.put("Gibberella zeae", "5518");
+		hm.put("Homo sapiens", "9606");
+		hm.put("Mus musculus", "10090");
+		hm.put("Mycobacterium tuberculosis", "1773");
+		hm.put("Oryza sativa", "4530");
+		hm.put("Pan troglodytes", "9598");
+	}}
+
 	public static HashMap<String, String> getOrganismsTaxonomyMapping() throws ParserConfigurationException, SAXException, IOException{
-		HashMap<String, String> hm = new HashMap<String, String>();
 		WikiPathwaysClient wpClient = startWpApiClient();
 		String[] wpOrganisms = wpClient.listOrganisms();
 		for (String organism : wpOrganisms){
-			System.out.println(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
-			Document taxonomy = basicCalls.openXmlURL(constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_")));
-			try {
-				String ncbiTaxonomy = taxonomy.getElementsByTagName("Id").item(0).getTextContent().trim();
-				hm.put(organism, ncbiTaxonomy);
-			} catch (Exception error) {
-				System.out.println("ERROR: while getting taxonomy ID for organism: " + organism);
+			if (!hm.containsKey(organism)) {
+				String eUtilsURL = constants.getEUtilsUrl("taxonomy", organism.replace(" ", "_"));
+				System.out.println(eUtilsURL);
+				Document taxonomy = basicCalls.openXmlURL(eUtilsURL);
+				try {
+					String ncbiTaxonomy = taxonomy.getElementsByTagName("Id").item(0).getTextContent().trim();
+					hm.put(organism, ncbiTaxonomy);
+				} catch (Exception error) {
+					System.out.println("ERROR: while getting taxonomy ID for organism: " + organism);
+				}
 			}
 		}
 		return hm;
