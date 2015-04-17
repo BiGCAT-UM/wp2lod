@@ -457,7 +457,6 @@ public class WpRDFFunctionLibrary {
 
 	public static void addDataNodeTriples(Model model, Resource pwResource, Node dataNode, String wpId, String revId, Model bridgeDbModel, IDMapper mapper, Model openPhactsLinkSets) throws IOException, IDMapperException{
 		String dataNodeLabel = dataNode.getAttributes().getNamedItem("TextLabel").getTextContent().trim();
-		System.out.println("Adding data node: " + dataNodeLabel);
 		String dataNodeType="";
 		if (dataNode.getAttributes().getNamedItem("Type") != null){ 
 			dataNodeType = dataNode.getAttributes().getNamedItem("Type").getTextContent().trim();
