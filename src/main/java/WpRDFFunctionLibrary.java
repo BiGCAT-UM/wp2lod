@@ -290,7 +290,7 @@ public class WpRDFFunctionLibrary {
 
 	// prepopulate the map to reduce the call to the NCBI database
 	final static HashMap<String, String> hm = new HashMap<String, String>();
-	{{
+	static {{
 		hm.put("Anopheles gambiae", "7165");
 		hm.put("Arabidopsis thaliana", "3702");
 		hm.put("Bacillus subtilis", "1423");
