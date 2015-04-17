@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -451,8 +452,11 @@ public class WpRDFFunctionLibrary {
 		return pathwayResource;
 	}
 
+	private static Map<String,DataSourceInfo> sources = new HashMap<String,DataSourceInfo>();
+
 	public static void addDataNodeTriples(Model model, Resource pwResource, Node dataNode, String wpId, String revId, Model bridgeDbModel, IDMapper mapper, Model openPhactsLinkSets) throws IOException, IDMapperException{
 		String dataNodeLabel = dataNode.getAttributes().getNamedItem("TextLabel").getTextContent().trim();
+		System.out.println("Adding data node: " + dataNodeLabel);
 		String dataNodeType="";
 		if (dataNode.getAttributes().getNamedItem("Type") != null){ 
 			dataNodeType = dataNode.getAttributes().getNamedItem("Type").getTextContent().trim();
@@ -475,56 +479,58 @@ public class WpRDFFunctionLibrary {
 		if (((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("ZOrder")!=null)
 			dataNodeZorder = ((Element) dataNode).getElementsByTagName("Graphics").item(0).getAttributes().getNamedItem("ZOrder").getTextContent().trim();
 
+		if (!sources.containsKey(dataNodeDataSource)) {
+			System.out.println("No info for data source: " + dataNodeDataSource);
+			String sparqlQueryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
+					"			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
+					"			PREFIX dc: <http://purl.org/dc/terms/>\n" + 
+					"			PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + 
+					"			PREFIX schema: <http://schema.org/>\n" + 
+					"			PREFIX bridgeDb: <http://openphacts.cs.man.ac.uk:9090//ontology/DataSource.owl#>\n" + 
+					"			SELECT DISTINCT  ?identifiers_org_base ?urlPattern ?bio2rdf ?origrdf\n" + 
+					"			WHERE {\n" + 
+					"			?datasource bridgeDb:fullName \""+dataNodeDataSource+"\" .\n" + 
+					"			OPTIONAL {?datasource bridgeDb:urnBase ?urnBase .}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:code ?code .}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:mainUrl ?mainUrl .}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:type ?bdtype .}\n" + 
+					"			?datasource bridgeDb:identifiers_org_base ?identifiers_org_base .\n" + 
+					"			OPTIONAL {?datasource bridgeDb:urlPattern ?urlPattern .}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:shortName ?shortName .}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:bio2RDF ?bio2rdf.}\n" + 
+					"			OPTIONAL {?datasource bridgeDb:sourceRDFURI ?origrdf.}\n" + 
+					"			}";
+			Query query = QueryFactory.create(sparqlQueryString);
+			QueryExecution queryExecution = QueryExecutionFactory.create(query, bridgeDbModel);
 
-		String sparqlQueryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n" + 
-		"			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + 
-		"			PREFIX dc: <http://purl.org/dc/terms/>\n" + 
-		"			PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n" + 
-		"			PREFIX schema: <http://schema.org/>\n" + 
-		"			PREFIX bridgeDb: <http://openphacts.cs.man.ac.uk:9090//ontology/DataSource.owl#>\n" + 
-		"			SELECT DISTINCT  ?identifiers_org_base ?urlPattern ?bio2rdf ?origrdf\n" + 
-		"			WHERE {\n" + 
-		"			?datasource bridgeDb:fullName \""+dataNodeDataSource+"\" .\n" + 
-		"			OPTIONAL {?datasource bridgeDb:urnBase ?urnBase .}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:code ?code .}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:mainUrl ?mainUrl .}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:type ?bdtype .}\n" + 
-		"			?datasource bridgeDb:identifiers_org_base ?identifiers_org_base .\n" + 
-		"			OPTIONAL {?datasource bridgeDb:urlPattern ?urlPattern .}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:shortName ?shortName .}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:bio2RDF ?bio2rdf.}\n" + 
-		"			OPTIONAL {?datasource bridgeDb:sourceRDFURI ?origrdf.}\n" + 
-		"			}";
-		Query query = QueryFactory.create(sparqlQueryString);
-		QueryExecution queryExecution = QueryExecutionFactory.create(query, bridgeDbModel);
-
-		ResultSet resultSet = queryExecution.execSelect();
-		String sourceRDFURI=null;
-		String bio2RdfURI=null;
-		String nonRDFURIURI=null;
-		String identifiersorgURI=null;
-		while (resultSet.hasNext()) {
-			QuerySolution solution = resultSet.next();
-			if (solution.get("origrdf") != null) {
-				sourceRDFURI = solution.get("origrdf").toString();
+			ResultSet resultSet = queryExecution.execSelect();
+			DataSourceInfo sourceInfo = new DataSourceInfo();
+			while (resultSet.hasNext()) {
+				QuerySolution solution = resultSet.next();
+				if (solution.get("origrdf") != null) {
+					sourceInfo.sourceRDFURI = solution.get("origrdf").toString();
+				}
+				if (solution.get("bio2rdf") != null){
+					sourceInfo.bio2RdfURI = solution.get("bio2rdf").toString();
+				}
+				if (solution.get("urlPattern") != null){
+					sourceInfo.nonRDFURIURI = solution.get("urlPattern").toString();
+				}
+				if (solution.get("identifiers_org_base") != null){
+					sourceInfo.identifiersorgURI = solution.get("identifiers_org_base").toString();
+				}
 			}
-			if (solution.get("bio2rdf") != null){
-				bio2RdfURI = solution.get("bio2rdf").toString();
-			}
-			if (solution.get("urlPattern") != null){
-				nonRDFURIURI = solution.get("urlPattern").toString();
-			}
-			if (solution.get("identifiers_org_base") != null){
-				identifiersorgURI = solution.get("identifiers_org_base").toString();
-			}
+			sources.put(dataNodeDataSource, sourceInfo);
 		}
+		DataSourceInfo sourceInfo = sources.get(dataNodeDataSource);
+
 		String conceptUrl = "http://rdf.wikipathways.org/error/$id"; 
-		if (sourceRDFURI!= null) {
-			conceptUrl = sourceRDFURI;
-		} else if (bio2RdfURI != null){
-			conceptUrl = bio2RdfURI;
-		} else if (nonRDFURIURI != null){
-			conceptUrl = nonRDFURIURI;
+		if (sourceInfo.sourceRDFURI!= null) {
+			conceptUrl = sourceInfo.sourceRDFURI;
+		} else if (sourceInfo.bio2RdfURI != null){
+			conceptUrl = sourceInfo.bio2RdfURI;
+		} else if (sourceInfo.nonRDFURIURI != null){
+			conceptUrl = sourceInfo.nonRDFURIURI;
 		}
 
 		String dataNodeGraphId = "";
@@ -554,7 +560,7 @@ public class WpRDFFunctionLibrary {
 				identifiersOrgResource.addLiteral(RDFS.comment, "This URI represents a DataNode in GPML where there is no Identifier given set. ");
 				internalWPDataNodeResource.addProperty(RDF.type, Gpml.requiresCurationAttention);
 			} else {
-				identifiersOrgResource = model.createResource(identifiersorgURI + dataNodeIdentifier);
+				identifiersOrgResource = model.createResource(sourceInfo.identifiersorgURI + dataNodeIdentifier);
 			}
 
 		}
@@ -594,7 +600,7 @@ public class WpRDFFunctionLibrary {
 		if ((dataNodeResource != null) && (dataNodeDataSource != "")){ 
 			internalWPDataNodeResource.addProperty(RDFS.subClassOf, dataNodeResource);
 		}
-		if (identifiersorgURI != null) internalWPDataNodeResource.addProperty(DC.identifier, identifiersOrgResource);
+		if (sourceInfo.identifiersorgURI != null) internalWPDataNodeResource.addProperty(DC.identifier, identifiersOrgResource);
 		internalWPDataNodeResource.addLiteral(DCTerms.identifier, dataNodeIdentifier);
 		if (dataNodeGroupRef != ""){
 
