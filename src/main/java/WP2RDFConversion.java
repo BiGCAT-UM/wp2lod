@@ -146,65 +146,66 @@ public class WP2RDFConversion {
 		 */
 		NodeList pathwayElements = wikiPathwaysDom.getElementsByTagName("Pathway");
 		for (int i=0; i<pathwayElements.getLength(); i++){
+			Element ithElement = (Element)pathwayElements.item(i);
 			Model pathwayModel = WpRDFFunctionLibrary.createPathwayModel(); // create empty rdf model
                         Model openPhactsLinkSets = ModelFactory.createDefaultModel();
-			String wpId = pathwayElements.item(i).getAttributes().getNamedItem("identifier").getTextContent();
-			String revision = pathwayElements.item(i).getAttributes().getNamedItem("revision").getTextContent();
+			String wpId = ithElement.getAttributes().getNamedItem("identifier").getTextContent();
+			String revision = ithElement.getAttributes().getNamedItem("revision").getTextContent();
 			String pathwayOrganism = "";
-			if (pathwayElements.item(i).getAttributes().getNamedItem("Organism") != null)
-				pathwayOrganism = pathwayElements.item(i).getAttributes().getNamedItem("Organism").getTextContent().trim();
+			if (ithElement.getAttributes().getNamedItem("Organism") != null)
+				pathwayOrganism = ithElement.getAttributes().getNamedItem("Organism").getTextContent().trim();
             if (Integer.valueOf(revision) > latestRevision){
             	latestRevision = Integer.valueOf(revision);
             }
 			File f = new File(prop.getProperty("rdfRepository") + "/" +wpId+"_r"+revision+".ttl");
 			System.out.println(f.getName());
 			if(!f.exists()) {
-				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, pathwayElements.item(i), organismTaxonomy);				
+				Resource pwResource = WpRDFFunctionLibrary.addPathwayLevelTriple(pathwayModel, ithElement, organismTaxonomy);				
 				
 				// Get the comments
-				NodeList commentElements = ((Element) pathwayElements.item(i)).getElementsByTagName("Comment");
+				NodeList commentElements = ithElement.getElementsByTagName("Comment");
 				WpRDFFunctionLibrary.addCommentTriples(pathwayModel, pwResource, commentElements, wpId, revision);		
 				
 				// Get the Groups
-				NodeList groupElements = ((Element) pathwayElements.item(i)).getElementsByTagName("Group");
+				NodeList groupElements = ithElement.getElementsByTagName("Group");
 				for (int n=0;n<groupElements.getLength(); n++){
 					WpRDFFunctionLibrary.addGroupTriples(pathwayModel, pwResource, groupElements.item(n), wpId, revision);
 				}
 	
 				// Get all the Datanodes
-				NodeList dataNodesElement = ((Element) pathwayElements.item(i)).getElementsByTagName("DataNode");
+				NodeList dataNodesElement = ithElement.getElementsByTagName("DataNode");
 				for (int j=0; j<dataNodesElement.getLength(); j++){
 					WpRDFFunctionLibrary.addDataNodeTriples(pathwayModel, pwResource, dataNodesElement.item(j), wpId, revision, bridgeDbmodel, mapper, openPhactsLinkSets);
 				}
 				
 				// Get all the lines
-				NodeList linesElement = ((Element) pathwayElements.item(i)).getElementsByTagName("Interaction");
+				NodeList linesElement = ithElement.getElementsByTagName("Interaction");
 				for (int k=0; k<linesElement.getLength(); k++){
 					WpRDFFunctionLibrary.addLineTriples(pathwayModel, pwResource, linesElement.item(k), wpId, revision);
 				}
 				
 				//Get all the labels
-				NodeList labelsElement = ((Element) pathwayElements.item(i)).getElementsByTagName("Label");
+				NodeList labelsElement = ithElement.getElementsByTagName("Label");
 				for (int l=0; l<labelsElement.getLength(); l++){
 					WpRDFFunctionLibrary.addLabelTriples(pathwayModel, pwResource, labelsElement.item(l), wpId, revision);
 				}
 				
 				//Get the references. There are three casing examples of publicationxref, that is why the call is repeated three times. 
-				NodeList referenceElements = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:PublicationXref");
+				NodeList referenceElements = ithElement.getElementsByTagName("bp:PublicationXref");
 				for (int m=0; m<referenceElements.getLength(); m++){
 					WpRDFFunctionLibrary.addReferenceTriples(pathwayModel, pwResource, referenceElements.item(m), wpId, revision);
 				}
-				NodeList referenceElements2 = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:publicationXref");
+				NodeList referenceElements2 = ithElement.getElementsByTagName("bp:publicationXref");
 				for (int m=0; m<referenceElements2.getLength(); m++){
 					WpRDFFunctionLibrary.addReferenceTriples(pathwayModel, pwResource, referenceElements2.item(m), wpId, revision);
 				}
-				NodeList referenceElements3 = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:PublicationXRef");
+				NodeList referenceElements3 = ithElement.getElementsByTagName("bp:PublicationXRef");
 				for (int m=0; m<referenceElements3.getLength(); m++){
 					WpRDFFunctionLibrary.addReferenceTriples(pathwayModel, pwResource, referenceElements3.item(m), wpId, revision);
 				}
 
 				//Get the ontologies.
-				NodeList ontologyElements = ((Element) pathwayElements.item(i)).getElementsByTagName("bp:openControlledVocabulary");
+				NodeList ontologyElements = ithElement.getElementsByTagName("bp:openControlledVocabulary");
 				for (int n=0; n<ontologyElements.getLength();n++){
 					WpRDFFunctionLibrary.addPathwayOntologyTriples(pathwayModel, pwResource, ontologyElements.item(n));
 				}
