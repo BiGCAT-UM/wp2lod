@@ -37,7 +37,7 @@ public class WP2RDFConversionTest {
 		Document currentGPML = db.parse(this.getClass().getResourceAsStream("/WP2836_79835.gpml"));
 		Assert.assertNotNull(currentGPML);
 		Properties props = new Properties();
-		props.setProperty("rdfRepository", System.getProperty("java.io.tmpdir"));
+		props.setProperty("rdfRepository", ".");
 		Element pathwayElement = (Element) currentGPML.getElementsByTagName("Pathway").item(0);
     	String wpIdentifier = "WP2836";
     	String wpRevision = "79835";
