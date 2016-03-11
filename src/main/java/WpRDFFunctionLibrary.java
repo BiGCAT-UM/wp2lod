@@ -222,8 +222,8 @@ public class WpRDFFunctionLibrary {
 		while (iter.hasNext()){
 			Xref linkedId = (Xref) iter.next();
 			String linkedIdString = linkedId.getId();
-			if (linkedId.getURN() != null && linkedId.getURN().contains("urn")){
-				String linkedIdSource = linkedId.getURN().split(":")[2];
+			if (linkedId.getMiriamURN().contains("urn")){
+				String linkedIdSource = linkedId.getMiriamURN().split(":")[2];
 				Resource linkedIdResource = openPhactsLinkSets.createResource("http://identifiers.org/"+linkedIdSource+"/"+linkedIdString);
 				internalWPDataNodeResource.addProperty(Skos.related, linkedIdResource);
 			}
