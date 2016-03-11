@@ -222,11 +222,8 @@ public class WpRDFFunctionLibrary {
 		while (iter.hasNext()){
 			Xref linkedId = (Xref) iter.next();
 			String linkedIdString = linkedId.getId();
-			//System.out.println(linkedId.getURN());
-			if (linkedId.getURN().contains("urn")){
-				//System.out.println(linkedId.getURN().split(":").length);
+			if (linkedId.getURN() != null && linkedId.getURN().contains("urn")){
 				String linkedIdSource = linkedId.getURN().split(":")[2];
-				//System.out.println("http://identifiers.org/"+linkedIdSource+"/"+linkedIdString);
 				Resource linkedIdResource = openPhactsLinkSets.createResource("http://identifiers.org/"+linkedIdSource+"/"+linkedIdString);
 				internalWPDataNodeResource.addProperty(Skos.related, linkedIdResource);
 			}
