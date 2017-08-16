@@ -1,3 +1,5 @@
+THIS IS REPLACE BY https://github.com/wikipathways/GPML2RDF
+
 wp2lod
 =========
 
