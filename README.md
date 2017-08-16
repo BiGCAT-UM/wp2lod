@@ -3,18 +3,18 @@ wp2lod
 
 This repo is a collection of all the files needed to run the wp2lod pipeline. Follow the steps below to clone and run this code.
 
-##Command line
+## Command line
 ```git clone <paste wp2lod repo url>```
 
-##Set config properties
+## Set config properties
 * Rename config.properties.default to config.properties
 * Edit the ```config.properties``` with relevant file locations
 
-##With Ant
+## With Ant
 
 * ```ant clean runTests```
 
-##In Eclipse
+## In Eclipse
 * Create a new project and point to cloned code
 * Add lib jars to Build Path
 * Specify (create?) src folder
@@ -22,10 +22,10 @@ This repo is a collection of all the files needed to run the wp2lod pipeline. Fo
 * RunConfiguration: main=Pathway2RDFv2
 * File>Export>Runnable JAR file (to tmp/WP2Rdf.jar; expect warnings)
 
-##Command line
+## Command line
 ```sh scripts/masterScript.sh``` (references runnable jars)
 
-##Ragamuffin
+## Ragamuffin
 * output files from pipeline:
  * wpContent_…_ttl
  * void.ttl
@@ -33,7 +33,7 @@ This repo is a collection of all the files needed to run the wp2lod pipeline. Fo
 ```/home/virtuoso/andra/wp/db```
 * Other ontologies files go into this same dir, e.g., *.owl and *.obo files
 
-#Check new files in test instance
+# Check new files in test instance
 
 ```cd /home/virtuoso/andra/```
 
